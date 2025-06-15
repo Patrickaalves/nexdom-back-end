@@ -33,8 +33,8 @@ public class ProductValidator implements Validator {
     }
 
     private void validateUserName(ProductDto productDto, Errors errors) {
-//        if (productService.existsByUserName(productDto.username())) {
-//            errors.rejectValue("name", "UserNameConflict", "UserName is already taken");
-//        }
+        if (productService.existsByCode(productDto.code())) {
+            errors.rejectValue("code", "CodeConflict", "Code is already taken");
+        }
     }
 }

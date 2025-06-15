@@ -22,4 +22,9 @@ public class ProductServiceImpl implements ProductService {
         BeanUtils.copyProperties(productDto, productModel);
         return productRepository.save(productModel);
     }
+
+    @Override
+    public boolean existsByCode(String code) {
+        return productRepository.existsByCode(code);
+    }
 }

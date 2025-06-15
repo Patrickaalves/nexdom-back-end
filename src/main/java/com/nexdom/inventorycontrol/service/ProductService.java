@@ -5,5 +5,7 @@ import com.nexdom.inventorycontrol.model.ProductModel;
 import jakarta.validation.Valid;
 
 public interface ProductService {
+
     ProductModel registerProduct(@Valid ProductDto productDto);
+    boolean existsByCode(String code);
 }

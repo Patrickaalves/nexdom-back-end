@@ -24,8 +24,6 @@ public class ProductController {
         this.productValidator = productValidator;
     }
 
-
-
     @PostMapping
     public ResponseEntity<Object> saveProduct(@RequestBody ProductDto productDto,
                                               Errors errors) {
