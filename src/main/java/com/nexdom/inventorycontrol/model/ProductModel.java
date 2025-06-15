@@ -1,5 +1,6 @@
 package com.nexdom.inventorycontrol.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.nexdom.inventorycontrol.enums.ProductType;
@@ -25,6 +26,7 @@ public class ProductModel implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @JsonIgnore
     private UUID productId;
 
     @Column(nullable = false, unique = true, length = 20)

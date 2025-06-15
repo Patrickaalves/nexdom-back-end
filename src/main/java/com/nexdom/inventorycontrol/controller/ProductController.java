@@ -1,16 +1,16 @@
 package com.nexdom.inventorycontrol.controller;
 
 import com.nexdom.inventorycontrol.dtos.response.ProductDto;
+import com.nexdom.inventorycontrol.model.ProductModel;
 import com.nexdom.inventorycontrol.service.ProductService;
+import com.nexdom.inventorycontrol.specifications.SpecificationProduct;
 import com.nexdom.inventorycontrol.validations.ProductValidator;
-import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/product")
@@ -22,6 +22,12 @@ public class ProductController {
     public ProductController(ProductService productService, ProductValidator productValidator) {
         this.productService = productService;
         this.productValidator = productValidator;
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<ProductModel>> getAllProducts(SpecificationProduct.ProductSpec spec,
+                                                             Pageable pageable) {
+        return ResponseEntity.status(HttpStatus.OK).body(productService.findAll(spec, pageable));
     }
 
     @PostMapping

@@ -1,5 +1,6 @@
 package com.nexdom.inventorycontrol.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.nexdom.inventorycontrol.enums.OperationType;
@@ -22,6 +23,7 @@ public class StockMovementModel implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @JsonIgnore
     private UUID stockMovementId;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)

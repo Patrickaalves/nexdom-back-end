@@ -5,6 +5,9 @@ import com.nexdom.inventorycontrol.model.ProductModel;
 import com.nexdom.inventorycontrol.repositories.ProductRepository;
 import com.nexdom.inventorycontrol.service.ProductService;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,5 +29,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public boolean existsByCode(String code) {
         return productRepository.existsByCode(code);
+    }
+
+    @Override
+    public Page<ProductModel> findAll(Specification<ProductModel> spec, Pageable pageable) {
+        return productRepository.findAll(spec, pageable);
     }
 }
