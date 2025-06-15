@@ -1,8 +1,6 @@
 package com.nexdom.inventorycontrol.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.nexdom.inventorycontrol.enums.OperationType;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -26,9 +24,11 @@ public class StockMovementModel implements Serializable {
 //    @JsonIgnore
     private UUID stockMovementId;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "product_id", nullable = true,
+            foreignKey = @ForeignKey(name = "fk_stock_product",
+                    foreignKeyDefinition =
+                            "FOREIGN KEY (product_id) REFERENCES tb_products(product_id) ON DELETE SET NULL"))
     private ProductModel product;
 
     @Column(nullable = false)
@@ -47,6 +47,16 @@ public class StockMovementModel implements Serializable {
     @Column(nullable = false, updatable = false)
     @CreationTimestamp
     private LocalDateTime creationDate;
+
+    @Column(nullable = false, length = 20)
+    private String productCode;
+
+    @PrePersist
+    public void prePersist() {
+        if (this.product != null) {
+            this.productCode = product.getCode();
+        }
+    }
 
     public UUID getStockMovementId() {
         return stockMovementId;
@@ -102,5 +112,13 @@ public class StockMovementModel implements Serializable {
 
     public void setCreationDate(LocalDateTime creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public String getProductCode() {
+        return productCode;
+    }
+
+    public void setProductCode(String productCode) {
+        this.productCode = productCode;
     }
 }

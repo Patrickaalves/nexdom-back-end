@@ -1,6 +1,6 @@
 package com.nexdom.inventorycontrol.validations;
 
-import com.nexdom.inventorycontrol.dtos.response.ProductDto;
+import com.nexdom.inventorycontrol.dtos.response.ProductRecordDto;
 import com.nexdom.inventorycontrol.service.ProductService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -25,14 +25,14 @@ public class ProductValidator implements Validator {
 
     @Override
     public void validate(Object o, Errors errors) {
-        ProductDto productDto = (ProductDto) o;
+        ProductRecordDto productDto = (ProductRecordDto) o;
         validator.validate(productDto, errors);
         if (!errors.hasErrors()) {
-            validateUserName(productDto, errors);
+            validateCode(productDto, errors);
         }
     }
 
-    private void validateUserName(ProductDto productDto, Errors errors) {
+    private void validateCode(ProductRecordDto productDto, Errors errors) {
         if (productService.existsByCode(productDto.code())) {
             errors.rejectValue("code", "CodeConflict", "Code is already taken");
         }
