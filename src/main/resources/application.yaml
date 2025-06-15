@@ -17,5 +17,6 @@ spring:
     properties:
       hibernate:
         jdbc:
+          time_zone: UTC
           lob:
             non-contextual-creation: true
