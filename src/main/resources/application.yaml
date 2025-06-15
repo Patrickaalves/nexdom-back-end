@@ -1,0 +1,21 @@
+server:
+  port: 8080
+  servlet:
+    context-path: '/inventory-control/'
+
+spring:
+  application:
+    name: inventory-control
+  datasource:
+    url: jdbc:postgresql://localhost:5433/inventory_control
+    username: postgres
+    password: 1234
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non-contextual-creation: true
