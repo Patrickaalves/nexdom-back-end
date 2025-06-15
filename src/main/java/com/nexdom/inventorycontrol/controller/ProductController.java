@@ -12,6 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/product")
 public class ProductController {
@@ -28,6 +31,12 @@ public class ProductController {
     public ResponseEntity<Page<ProductModel>> getAllProducts(SpecificationProduct.ProductSpec spec,
                                                              Pageable pageable) {
         return ResponseEntity.status(HttpStatus.OK).body(productService.findAll(spec, pageable));
+    }
+
+    @GetMapping("/{productId}")
+    public ResponseEntity<Object> getOneProduct(@PathVariable UUID productId) {
+        Optional<ProductModel> optionalProductModel = productService.findById(productId);
+        return ResponseEntity.status(HttpStatus.OK).body(optionalProductModel.get());
     }
 
     @PostMapping

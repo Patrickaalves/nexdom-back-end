@@ -26,7 +26,7 @@ public class ProductModel implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @JsonIgnore
+//    @JsonIgnore
     private UUID productId;
 
     @Column(nullable = false, unique = true, length = 20)

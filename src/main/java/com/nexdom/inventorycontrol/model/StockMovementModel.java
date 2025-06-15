@@ -23,7 +23,7 @@ public class StockMovementModel implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @JsonIgnore
+//    @JsonIgnore
     private UUID stockMovementId;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
