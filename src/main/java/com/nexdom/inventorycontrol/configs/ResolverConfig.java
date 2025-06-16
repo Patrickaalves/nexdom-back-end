@@ -30,6 +30,6 @@ public class ResolverConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**").maxAge(3600); //Paginação a nivel global
+        registry.addMapping("/**").maxAge(3600); //Habilitando o cors a nivel global
     }
 }
