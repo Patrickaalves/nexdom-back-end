@@ -37,7 +37,7 @@ public class StockMovementController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors.getAllErrors());
         }
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(stockMovementService.registerStockMovement(stockMovementRecordDto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new StockMovementResponseDto(stockMovementService.registerStockMovement(stockMovementRecordDto)));
     }
 
     @GetMapping

@@ -66,7 +66,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
         """.formatted(ProductAggregateDto.class.getName());
 
         Map<String, Object> filters = new HashMap<>();
-        filters.put("productType", ProductType.FURNITURE);
+        filters.put("productType", ProductType.valueOf(productType));
         filters.put("productId", productId);
         filters.put("operationType", OperationType.EXIT);
 

@@ -6,12 +6,12 @@ import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
 
-public record ProductRecordDto(@JsonView(ProductView.ProductPost.class)
-                               @NotBlank(message = "code is mandatory", groups = ProductView.ProductPost.class)
-                               @Size(max = 20, message = "code must have at most 20 characters", groups = ProductView.ProductPost.class)
+public record ProductRecordDto(@JsonView({ProductView.ProductPost.class, ProductView.ProductPut.class})
+                               @NotBlank(message = "code is mandatory", groups = {ProductView.ProductPost.class, ProductView.ProductPut.class})
+                               @Size(max = 20, message = "code must have at most 20 characters", groups = {ProductView.ProductPost.class, ProductView.ProductPut.class})
                                @Pattern(regexp = "^[A-Za-z0-9_-]{1,20}$",
                                        message = "code accepts only upper‑case letters, digits, _ or -",
-                                       groups = ProductView.ProductPost.class)
+                                       groups = {ProductView.ProductPost.class, ProductView.ProductPut.class})
                                String code,
 
                                @JsonView(ProductView.ProductPost.class)

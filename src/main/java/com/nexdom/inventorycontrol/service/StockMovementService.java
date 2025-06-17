@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface StockMovementService {
-    StockMovementResponseDto registerStockMovement(StockMovementRecordDto stockMovementRecordDto);
+    StockMovementModel registerStockMovement(StockMovementRecordDto stockMovementRecordDto);
 
     Optional<StockMovementModel> findById(UUID stockMovementId);
 

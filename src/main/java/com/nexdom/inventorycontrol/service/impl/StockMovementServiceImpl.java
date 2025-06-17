@@ -2,7 +2,6 @@ package com.nexdom.inventorycontrol.service.impl;
 
 import com.nexdom.inventorycontrol.dtos.StockMovementRecordDto;
 import com.nexdom.inventorycontrol.dtos.response.StockMovementResponseDto;
-import com.nexdom.inventorycontrol.enums.OperationType;
 import com.nexdom.inventorycontrol.exceptions.NotFoundException;
 import com.nexdom.inventorycontrol.model.ProductModel;
 import com.nexdom.inventorycontrol.model.StockMovementModel;
@@ -32,31 +31,21 @@ public class StockMovementServiceImpl implements StockMovementService {
 
     @Transactional
     @Override
-    public StockMovementResponseDto registerStockMovement(StockMovementRecordDto dto) {
+    public StockMovementModel registerStockMovement(StockMovementRecordDto dto) {
 
         ProductModel product = productService.findById(dto.productId()).get();
 
         updateProductStock(product, dto);
 
-        StockMovementModel mov = createStockMovement(dto, product);
+        StockMovementModel stockMovement = createStockMovement(dto, product);
 
-        stockMovementRepository.save(mov);
-
-        return new StockMovementResponseDto(mov);
+        return stockMovementRepository.save(stockMovement);
     }
 
     private void updateProductStock(ProductModel product, StockMovementRecordDto dto) {
-        if (dto.operationType() == OperationType.EXIT) {
-            validateStockAvailability(product, dto.movementQuantity());
-            product.setStockQuantity(product.getStockQuantity() - dto.movementQuantity());
-        } else {
-            product.setStockQuantity(product.getStockQuantity() + dto.movementQuantity());
-        }
-    }
-
-    private void validateStockAvailability(ProductModel product, Integer quantity) {
-        if (product.getStockQuantity() < quantity) {
-            throw new IllegalArgumentException("Insufficient stock for exit");
+        switch (dto.operationType()) {
+            case EXIT  -> product.debitStock(dto.movementQuantity());
+            case ENTRY -> product.creditStock(dto.movementQuantity());
         }
     }
 

@@ -1,10 +1,10 @@
 package com.nexdom.inventorycontrol.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.nexdom.inventorycontrol.enums.ProductType;
 import com.nexdom.inventorycontrol.exceptions.BusinessInsuficientStock;
-import com.nexdom.inventorycontrol.exceptions.NotFoundException;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Fetch;
@@ -56,20 +56,21 @@ public class ProductModel implements Serializable {
     @Fetch(FetchMode.SUBSELECT)
     private Set<StockMovementModel> stockMovement;
 
+    @JsonIgnore
     @Version                          // <‑ lock otimista
     private Long version;
 
     public void creditStock(int qty) {
         validatePositive(qty);
-        stockQuantity += qty;
+        this.stockQuantity += qty;
     }
 
     public void debitStock(int qty) {
         validatePositive(qty);
-        if (stockQuantity < qty) {
+        if (this.stockQuantity < qty) {
             throw new BusinessInsuficientStock("Insufficient stock: requested " + qty + ", current stock " + stockQuantity);
         }
-        stockQuantity -= qty;
+        this.stockQuantity -= qty;
     }
 
     private void validatePositive(int qty) {
@@ -138,5 +139,9 @@ public class ProductModel implements Serializable {
 
     public void setStockMovement(Set<StockMovementModel> stockMovement) {
         this.stockMovement = stockMovement;
+    }
+
+    public Long getVersion() {
+        return version;
     }
 }

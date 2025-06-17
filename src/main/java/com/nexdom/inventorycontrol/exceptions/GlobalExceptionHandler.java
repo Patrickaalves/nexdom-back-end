@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -52,6 +53,20 @@ public class GlobalExceptionHandler {
         );
         var errorRecordResponse = new ErrorRecordResponse(HttpStatus.BAD_REQUEST.value(), "Error: validation failed", errors);
         logger.error("MethodArgumentNotValidException message {}", errorRecordResponse);
+        return new ResponseEntity<>(errorRecordResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ObjectOptimisticLockingFailureException.class)
+    public ResponseEntity<ErrorRecordResponse> handleOptimisticException(ObjectOptimisticLockingFailureException ex) {
+        var errorRecordResponse = new ErrorRecordResponse(HttpStatus.CONFLICT.value(), "Product has been updated by another user, please try again later", null);
+        logger.error("ObjectOptimisticLockingFailureException message {}", errorRecordResponse);
+        return new ResponseEntity<>(errorRecordResponse, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(ProductMovementStockExist.class)
+    public ResponseEntity<ErrorRecordResponse> productByExistInStockMovement(ProductMovementStockExist ex) {
+        var errorRecordResponse = new ErrorRecordResponse(HttpStatus.BAD_REQUEST.value(), ex.getMessage(), null);
+        logger.error("ProductMovementStockExist message {}", errorRecordResponse);
         return new ResponseEntity<>(errorRecordResponse, HttpStatus.BAD_REQUEST);
     }
 

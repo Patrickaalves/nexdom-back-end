@@ -4,8 +4,10 @@ import com.nexdom.inventorycontrol.dtos.response.ProductAggregateDto;
 import com.nexdom.inventorycontrol.dtos.response.ProductProfitDto;
 import com.nexdom.inventorycontrol.dtos.ProductRecordDto;
 import com.nexdom.inventorycontrol.exceptions.NotFoundException;
+import com.nexdom.inventorycontrol.exceptions.ProductMovementStockExist;
 import com.nexdom.inventorycontrol.model.ProductModel;
 import com.nexdom.inventorycontrol.repositories.ProductRepository;
+import com.nexdom.inventorycontrol.repositories.StockMovementRepository;
 import com.nexdom.inventorycontrol.service.ProductService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
@@ -21,9 +23,11 @@ import java.util.UUID;
 public class ProductServiceImpl implements ProductService {
 
     final ProductRepository productRepository;
+    private final StockMovementRepository stockMovementRepository;
 
-    public ProductServiceImpl(ProductRepository productRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, StockMovementRepository stockMovementRepository) {
         this.productRepository = productRepository;
+        this.stockMovementRepository = stockMovementRepository;
     }
 
     @Transactional
@@ -63,6 +67,9 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     @Override
     public ProductModel updateProduct(ProductRecordDto productDto, ProductModel productModel) {
+        if (stockMovementRepository.existsByProductId(productModel.getProductId())) {
+            throw new ProductMovementStockExist("For product id " + productModel.getProductId() + " already exist Movement Stock");
+        }
         productModel.setProductType(productDto.productType());
         productModel.setSupplierPrice(productDto.supplierPrice());
         productModel.setStockQuantity(productDto.stockQuantity());

@@ -52,7 +52,7 @@ public class ProductController {
     public ResponseEntity<Object> getProductsWithQuantitiesByType(@PathVariable String type,
                                                                   @PathVariable UUID productId) {
         productService.findById(productId);
-        return ResponseEntity.status(HttpStatus.OK).body(productService.getProductsWithQuantitiesByType(type, productId));
+        return ResponseEntity.status(HttpStatus.OK).body(productService.getProductsWithQuantitiesByType(type.toUpperCase(), productId));
     }
 
     @PostMapping
