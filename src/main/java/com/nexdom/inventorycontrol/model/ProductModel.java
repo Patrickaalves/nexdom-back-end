@@ -3,6 +3,8 @@ package com.nexdom.inventorycontrol.model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.nexdom.inventorycontrol.enums.ProductType;
+import com.nexdom.inventorycontrol.exceptions.BusinessInsuficientStock;
+import com.nexdom.inventorycontrol.exceptions.NotFoundException;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Fetch;
@@ -53,6 +55,26 @@ public class ProductModel implements Serializable {
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     @Fetch(FetchMode.SUBSELECT)
     private Set<StockMovementModel> stockMovement;
+
+    @Version                          // <‑ lock otimista
+    private Long version;
+
+    public void creditStock(int qty) {
+        validatePositive(qty);
+        stockQuantity += qty;
+    }
+
+    public void debitStock(int qty) {
+        validatePositive(qty);
+        if (stockQuantity < qty) {
+            throw new BusinessInsuficientStock("Insufficient stock: requested " + qty + ", current stock " + stockQuantity);
+        }
+        stockQuantity -= qty;
+    }
+
+    private void validatePositive(int qty) {
+        if (qty <= 0) throw new IllegalArgumentException("Quantity must be positive");
+    }
 
     public UUID getProductId() {
         return productId;

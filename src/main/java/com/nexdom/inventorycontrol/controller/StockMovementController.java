@@ -42,8 +42,13 @@ public class StockMovementController {
 
     @GetMapping
     public ResponseEntity<Page<StockMovementResponseDto>> getAllStockMovements(SpecificationStockMovement.StockMovementSpec spec,
-                                                                               Pageable pageable) {
-        return ResponseEntity.status(HttpStatus.OK).body(stockMovementService.findAllDto(spec, pageable));
+                                                                               Pageable pageable,
+                                                                               @RequestParam(required = false) UUID productId) {
+        Page<StockMovementResponseDto> stockMovementResponseDtos = (productId != null)
+                ? stockMovementService.findAllDto(SpecificationStockMovement.productStockMovements(productId).and(spec), pageable)
+                : stockMovementService.findAllDto(spec, pageable);
+
+        return ResponseEntity.status(HttpStatus.OK).body(stockMovementResponseDtos);
     }
 
     @GetMapping("/{stockMovementId}")

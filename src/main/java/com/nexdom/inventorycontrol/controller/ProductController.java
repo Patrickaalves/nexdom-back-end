@@ -41,6 +41,20 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK).body(optionalProductModel.get());
     }
 
+    @GetMapping("/profit-product/{productId}")
+    public ResponseEntity<Object> getProfitProduct(@PathVariable UUID productId) {
+        productService.findById(productId);
+        return ResponseEntity.status(HttpStatus.OK).body(productService.getProfitProduct(productId));
+    }
+
+    // Refatorar esse metodo
+    @GetMapping("/find-products-type/{type}/{productId}")
+    public ResponseEntity<Object> getProductsWithQuantitiesByType(@PathVariable String type,
+                                                                  @PathVariable UUID productId) {
+        productService.findById(productId);
+        return ResponseEntity.status(HttpStatus.OK).body(productService.getProductsWithQuantitiesByType(type, productId));
+    }
+
     @PostMapping
     public ResponseEntity<Object> saveProduct(@RequestBody @Validated(ProductRecordDto.ProductView.ProductPost.class)
                                               @JsonView(ProductRecordDto.ProductView.ProductPost.class) ProductRecordDto productDto,

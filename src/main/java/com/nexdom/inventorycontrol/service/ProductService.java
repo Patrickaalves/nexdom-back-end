@@ -1,5 +1,7 @@
 package com.nexdom.inventorycontrol.service;
 
+import com.nexdom.inventorycontrol.dtos.ProductAggregateDto;
+import com.nexdom.inventorycontrol.dtos.ProductProfitDto;
 import com.nexdom.inventorycontrol.dtos.ProductRecordDto;
 import com.nexdom.inventorycontrol.model.ProductModel;
 import jakarta.validation.Valid;
@@ -24,4 +26,8 @@ public interface ProductService {
     ProductModel updateProduct(ProductRecordDto productDto, ProductModel productModel);
 
     Optional<ProductModel> findByCode(String productCode);
+
+    ProductProfitDto getProfitProduct(UUID productId);
+
+    ProductAggregateDto getProductsWithQuantitiesByType(String type, UUID productId);
 }

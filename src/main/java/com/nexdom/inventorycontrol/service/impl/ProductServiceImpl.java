@@ -1,5 +1,7 @@
 package com.nexdom.inventorycontrol.service.impl;
 
+import com.nexdom.inventorycontrol.dtos.ProductAggregateDto;
+import com.nexdom.inventorycontrol.dtos.ProductProfitDto;
 import com.nexdom.inventorycontrol.dtos.ProductRecordDto;
 import com.nexdom.inventorycontrol.exceptions.NotFoundException;
 import com.nexdom.inventorycontrol.model.ProductModel;
@@ -75,5 +77,15 @@ public class ProductServiceImpl implements ProductService {
         }
 
         return productModelOptional;
+    }
+
+    @Override
+    public ProductProfitDto getProfitProduct(UUID productId) {
+        return productRepository.findProductProfits(productId);
+    }
+
+    @Override
+    public ProductAggregateDto getProductsWithQuantitiesByType(String type, UUID productId) {
+        return productRepository.findProductsWithQuantitiesByType(type, productId);
     }
 }

@@ -27,6 +27,20 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorRecordResponse, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(BusinessInsuficientStock.class)
+    public ResponseEntity<ErrorRecordResponse> handleBusinessInsuficientStockException(BusinessInsuficientStock ex) {
+        var errorRecordResponse = new ErrorRecordResponse(HttpStatus.BAD_REQUEST.value(), ex.getMessage(), null);
+        logger.error("BusinessInsuficientStock message {}", errorRecordResponse);
+        return new ResponseEntity<>(errorRecordResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorRecordResponse> handleIllegalArgumentExceptionException(IllegalArgumentException ex) {
+        var errorRecordResponse = new ErrorRecordResponse(HttpStatus.BAD_REQUEST.value(), ex.getMessage(), null);
+        logger.error("IllegalArgumentException message {}", errorRecordResponse);
+        return new ResponseEntity<>(errorRecordResponse, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorRecordResponse> handleValidationExceptions(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
