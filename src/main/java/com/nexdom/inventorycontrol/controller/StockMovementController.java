@@ -1,8 +1,8 @@
 package com.nexdom.inventorycontrol.controller;
 
-import com.nexdom.inventorycontrol.dtos.response.StockMovementRecordDto;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.nexdom.inventorycontrol.dtos.StockMovementRecordDto;
 import com.nexdom.inventorycontrol.dtos.response.StockMovementResponseDto;
-import com.nexdom.inventorycontrol.model.StockMovementModel;
 import com.nexdom.inventorycontrol.service.StockMovementService;
 import com.nexdom.inventorycontrol.specifications.SpecificationStockMovement;
 import com.nexdom.inventorycontrol.validations.StockMovementValidator;
@@ -30,7 +30,7 @@ public class StockMovementController {
 
     @PostMapping
     public ResponseEntity<Object> saveStockMovement(@RequestBody @Validated(StockMovementRecordDto.stockMovementView.stockMovementPost.class)
-                                                    StockMovementRecordDto stockMovementRecordDto,
+                                                    @JsonView(StockMovementRecordDto.stockMovementView.stockMovementPost.class) StockMovementRecordDto stockMovementRecordDto,
                                                     Errors errors) {
         stockMovementValidator.validate(stockMovementRecordDto, errors);
         if (errors.hasErrors()) {
@@ -48,7 +48,7 @@ public class StockMovementController {
 
     @GetMapping("/{stockMovementId}")
     public ResponseEntity<Object> getOneStockMovement(@PathVariable UUID stockMovementId) {
-        return ResponseEntity.status(HttpStatus.OK).body(stockMovementService.findById(stockMovementId).get());
+        return ResponseEntity.status(HttpStatus.OK).body(stockMovementService.findByIdDto(stockMovementId));
     }
 
     @DeleteMapping("/{stockMovementId}")

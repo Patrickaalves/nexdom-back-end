@@ -1,6 +1,6 @@
 package com.nexdom.inventorycontrol.service.impl;
 
-import com.nexdom.inventorycontrol.dtos.response.StockMovementRecordDto;
+import com.nexdom.inventorycontrol.dtos.StockMovementRecordDto;
 import com.nexdom.inventorycontrol.dtos.response.StockMovementResponseDto;
 import com.nexdom.inventorycontrol.exceptions.NotFoundException;
 import com.nexdom.inventorycontrol.model.ProductModel;
@@ -48,6 +48,11 @@ public class StockMovementServiceImpl implements StockMovementService {
         }
 
         return stockMovementModelOptional;
+    }
+
+    @Override
+    public StockMovementResponseDto findByIdDto(UUID stockMovementId) {
+        return this.findById(stockMovementId).map(StockMovementResponseDto::new).get();
     }
 
     @Transactional

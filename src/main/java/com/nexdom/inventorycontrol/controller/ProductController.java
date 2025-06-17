@@ -1,7 +1,7 @@
 package com.nexdom.inventorycontrol.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.nexdom.inventorycontrol.dtos.response.ProductRecordDto;
+import com.nexdom.inventorycontrol.dtos.ProductRecordDto;
 import com.nexdom.inventorycontrol.model.ProductModel;
 import com.nexdom.inventorycontrol.service.ProductService;
 import com.nexdom.inventorycontrol.specifications.SpecificationProduct;

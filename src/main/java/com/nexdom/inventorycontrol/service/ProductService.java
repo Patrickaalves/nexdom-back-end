@@ -1,6 +1,6 @@
 package com.nexdom.inventorycontrol.service;
 
-import com.nexdom.inventorycontrol.dtos.response.ProductRecordDto;
+import com.nexdom.inventorycontrol.dtos.ProductRecordDto;
 import com.nexdom.inventorycontrol.model.ProductModel;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;

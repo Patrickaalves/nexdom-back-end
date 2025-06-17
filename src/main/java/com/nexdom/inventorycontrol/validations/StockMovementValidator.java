@@ -1,6 +1,6 @@
 package com.nexdom.inventorycontrol.validations;
 
-import com.nexdom.inventorycontrol.dtos.response.StockMovementRecordDto;
+import com.nexdom.inventorycontrol.dtos.StockMovementRecordDto;
 import com.nexdom.inventorycontrol.service.StockMovementService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;

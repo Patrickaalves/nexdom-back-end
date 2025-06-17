@@ -1,6 +1,6 @@
 package com.nexdom.inventorycontrol.service.impl;
 
-import com.nexdom.inventorycontrol.dtos.response.ProductRecordDto;
+import com.nexdom.inventorycontrol.dtos.ProductRecordDto;
 import com.nexdom.inventorycontrol.exceptions.NotFoundException;
 import com.nexdom.inventorycontrol.model.ProductModel;
 import com.nexdom.inventorycontrol.repositories.ProductRepository;

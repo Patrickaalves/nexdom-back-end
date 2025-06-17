@@ -1,21 +1,25 @@
-package com.nexdom.inventorycontrol.dtos.response;
+package com.nexdom.inventorycontrol.dtos;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.nexdom.inventorycontrol.enums.ProductType;
 import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
 
-public record ProductRecordDto(@NotBlank(message = "code is mandatory", groups = ProductView.ProductPost.class)
+public record ProductRecordDto(@JsonView(ProductView.ProductPost.class)
+                               @NotBlank(message = "code is mandatory", groups = ProductView.ProductPost.class)
                                @Size(max = 20, message = "code must have at most 20 characters", groups = ProductView.ProductPost.class)
                                @Pattern(regexp = "^[A-Za-z0-9_-]{1,20}$",
                                        message = "code accepts only upper‑case letters, digits, _ or -",
                                        groups = ProductView.ProductPost.class)
                                String code,
 
+                               @JsonView(ProductView.ProductPost.class)
                                @NotNull(message = "productType is mandatory",
                                        groups = ProductView.ProductPost.class)
                                ProductType productType,
 
+                               @JsonView({ProductView.ProductPost.class, ProductView.ProductPut.class})
                                @NotNull(message = "supplierPrice is mandatory",
                                        groups = {ProductView.ProductPost.class, ProductView.ProductPut.class})
                                @Positive(message = "supplierPrice must be greater than zero", groups = {ProductView.ProductPost.class, ProductView.ProductPut.class})
@@ -24,6 +28,7 @@ public record ProductRecordDto(@NotBlank(message = "code is mandatory", groups =
                                       groups = {ProductView.ProductPost.class, ProductView.ProductPut.class})
                                BigDecimal supplierPrice,
 
+                               @JsonView({ProductView.ProductPost.class, ProductView.ProductPut.class})
                                @NotNull(message = "stockQuantity is mandatory",
                                        groups = {ProductView.ProductPost.class, ProductView.ProductPut.class})
                                @PositiveOrZero(message = "stockQuantity cannot be negative",

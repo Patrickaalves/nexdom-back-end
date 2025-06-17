@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -41,18 +42,46 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<ErrorRecordResponse> handleInvalidFormatException(HttpMessageNotReadableException ex) {
-        Map<String, String> errors = new HashMap<>();
+    public ResponseEntity<ErrorRecordResponse> handleJsonParseErrors(HttpMessageNotReadableException ex) {
 
-        if (ex.getCause() instanceof InvalidFormatException) {
-            InvalidFormatException ifx = (InvalidFormatException) ex.getCause();
-            if (ifx.getTargetType() != null && ifx.getTargetType().isEnum()) {
-                String fielName = ifx.getPath().get(ifx.getPath().size() - 1).getFieldName();
-                String errorMessage = ex.getMessage();
-                errors.put(fielName, errorMessage);
+        Map<String, String> errors = new HashMap<>();
+        Throwable cause = ex.getCause();
+
+        if (cause instanceof InvalidFormatException ifx) {
+            // nome do campo que falhou (último elemento do path JSON)
+            String fieldName = ifx.getPath().isEmpty()
+                    ? "request"
+                    : ifx.getPath().get(ifx.getPath().size() - 1).getFieldName();
+
+            Class<?> targetType = ifx.getTargetType();
+
+            /* ---------- ENUM inválido ---------- */
+            if (targetType.isEnum()) {
+                errors.put(fieldName,
+                        "Invalid value '" + ifx.getValue() + "' for enum "
+                                + targetType.getSimpleName());
+                return new ResponseEntity<>(
+                        new ErrorRecordResponse(HttpStatus.BAD_REQUEST.value(),
+                                "Error: Invalid enum value", errors),
+                        HttpStatus.BAD_REQUEST);
+            }
+
+            /* ---------- UUID inválido ---------- */
+            if (UUID.class.isAssignableFrom(targetType)) {
+                errors.put(fieldName,
+                        "Invalid UUID format. Expected 36‑character UUID.");
+                return new ResponseEntity<>(
+                        new ErrorRecordResponse(HttpStatus.BAD_REQUEST.value(),
+                                "Error: Invalid UUID value", errors),
+                        HttpStatus.BAD_REQUEST);
             }
         }
-        var errorRecordResponse = new ErrorRecordResponse(HttpStatus.BAD_REQUEST.value(), "Error: Invalid enum value", errors);
+
+        // fallback genérico (qualquer outro problema de leitura do JSON)
+        var errorRecordResponse = new ErrorRecordResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                "Malformed JSON request",
+                null);
         return new ResponseEntity<>(errorRecordResponse, HttpStatus.BAD_REQUEST);
     }
 }
