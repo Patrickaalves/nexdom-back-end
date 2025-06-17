@@ -1,7 +1,7 @@
 package com.nexdom.inventorycontrol.repositories.impl;
 
-import com.nexdom.inventorycontrol.dtos.ProductProfitDto;
-import com.nexdom.inventorycontrol.dtos.ProductAggregateDto;
+import com.nexdom.inventorycontrol.dtos.response.ProductProfitDto;
+import com.nexdom.inventorycontrol.dtos.response.ProductAggregateDto;
 import com.nexdom.inventorycontrol.enums.OperationType;
 import com.nexdom.inventorycontrol.enums.ProductType;
 import com.nexdom.inventorycontrol.repositories.JpqlExecutor;

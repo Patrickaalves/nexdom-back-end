@@ -1,7 +1,7 @@
 package com.nexdom.inventorycontrol.repositories;
 
-import com.nexdom.inventorycontrol.dtos.ProductProfitDto;
-import com.nexdom.inventorycontrol.dtos.ProductAggregateDto;
+import com.nexdom.inventorycontrol.dtos.response.ProductProfitDto;
+import com.nexdom.inventorycontrol.dtos.response.ProductAggregateDto;
 
 import java.util.UUID;
 

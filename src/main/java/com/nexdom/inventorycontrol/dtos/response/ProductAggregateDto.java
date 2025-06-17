@@ -1,4 +1,4 @@
-package com.nexdom.inventorycontrol.dtos;
+package com.nexdom.inventorycontrol.dtos.response;
 
 import com.nexdom.inventorycontrol.enums.ProductType;
 
