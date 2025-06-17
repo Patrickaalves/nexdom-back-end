@@ -60,6 +60,6 @@ public class StockMovementController {
     public ResponseEntity<Object> deleteStockMovement(@PathVariable UUID stockMovementId) {
         stockMovementService.delete(stockMovementService.findById(stockMovementId).get());
 
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("StockMovement deleted sucessfully");
+        return ResponseEntity.status(HttpStatus.OK).body("StockMovement deleted sucessfully");
     }
 }

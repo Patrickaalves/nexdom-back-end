@@ -29,6 +29,17 @@ public class ProductController {
         this.productValidator = productValidator;
     }
 
+    @PostMapping
+    public ResponseEntity<Object> saveProduct(@RequestBody @Validated(ProductRecordDto.ProductView.ProductPost.class)
+                                              @JsonView(ProductRecordDto.ProductView.ProductPost.class) ProductRecordDto productDto,
+                                              Errors errors) {
+        productValidator.validate(productDto, errors);
+        if (errors.hasErrors()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors.getAllErrors());
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(productService.registerProduct(productDto));
+    }
+
     @GetMapping
     public ResponseEntity<Page<ProductModel>> getAllProducts(SpecificationProduct.ProductSpec spec,
                                                              Pageable pageable) {
@@ -53,17 +64,6 @@ public class ProductController {
                                                                   @PathVariable UUID productId) {
         productService.findById(productId);
         return ResponseEntity.status(HttpStatus.OK).body(productService.getProductsWithQuantitiesByType(type.toUpperCase(), productId));
-    }
-
-    @PostMapping
-    public ResponseEntity<Object> saveProduct(@RequestBody @Validated(ProductRecordDto.ProductView.ProductPost.class)
-                                              @JsonView(ProductRecordDto.ProductView.ProductPost.class) ProductRecordDto productDto,
-                                              Errors errors) {
-        productValidator.validate(productDto, errors);
-        if (errors.hasErrors()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors.getAllErrors());
-        }
-        return ResponseEntity.status(HttpStatus.CREATED).body(productService.registerProduct(productDto));
     }
 
     @PutMapping("/{productId}")

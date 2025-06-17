@@ -2,6 +2,7 @@ package com.nexdom.inventorycontrol.service.impl;
 
 import com.nexdom.inventorycontrol.dtos.StockMovementRecordDto;
 import com.nexdom.inventorycontrol.dtos.response.StockMovementResponseDto;
+import com.nexdom.inventorycontrol.enums.OperationType;
 import com.nexdom.inventorycontrol.exceptions.NotFoundException;
 import com.nexdom.inventorycontrol.model.ProductModel;
 import com.nexdom.inventorycontrol.model.StockMovementModel;
@@ -35,14 +36,14 @@ public class StockMovementServiceImpl implements StockMovementService {
 
         ProductModel product = productService.findById(dto.productId()).get();
 
-        updateProductStock(product, dto);
+        updateProductStockForRegister(product, dto);
 
         StockMovementModel stockMovement = createStockMovement(dto, product);
 
         return stockMovementRepository.save(stockMovement);
     }
 
-    private void updateProductStock(ProductModel product, StockMovementRecordDto dto) {
+    private void updateProductStockForRegister(ProductModel product, StockMovementRecordDto dto) {
         switch (dto.operationType()) {
             case EXIT  -> product.debitStock(dto.movementQuantity());
             case ENTRY -> product.creditStock(dto.movementQuantity());
@@ -74,7 +75,15 @@ public class StockMovementServiceImpl implements StockMovementService {
     @Transactional
     @Override
     public void delete(StockMovementModel stockMovementModel) {
+        updateProductStockForDelete(stockMovementModel.getProduct(), stockMovementModel.getOperationType(), stockMovementModel.getMovementQuantity());
         stockMovementRepository.delete(stockMovementModel);
+    }
+
+    private void updateProductStockForDelete(ProductModel product,OperationType operationType, Integer movementQuantity) {
+        switch (operationType) {
+            case EXIT  -> product.creditStock(movementQuantity);
+            case ENTRY -> product.debitStock(movementQuantity);
+        }
     }
 
     @Override
