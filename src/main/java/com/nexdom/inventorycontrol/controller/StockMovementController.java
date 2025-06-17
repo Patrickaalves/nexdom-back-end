@@ -1,6 +1,7 @@
 package com.nexdom.inventorycontrol.controller;
 
 import com.nexdom.inventorycontrol.dtos.response.StockMovementRecordDto;
+import com.nexdom.inventorycontrol.dtos.response.StockMovementResponseDto;
 import com.nexdom.inventorycontrol.model.StockMovementModel;
 import com.nexdom.inventorycontrol.service.StockMovementService;
 import com.nexdom.inventorycontrol.specifications.SpecificationStockMovement;
@@ -40,8 +41,9 @@ public class StockMovementController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<StockMovementModel>> getAllStockMovements(SpecificationStockMovement.StockMovementSpec spec, Pageable pageable) {
-        return ResponseEntity.status(HttpStatus.OK).body(stockMovementService.findAll(spec, pageable));
+    public ResponseEntity<Page<StockMovementResponseDto>> getAllStockMovements(SpecificationStockMovement.StockMovementSpec spec,
+                                                                               Pageable pageable) {
+        return ResponseEntity.status(HttpStatus.OK).body(stockMovementService.findAllDto(spec, pageable));
     }
 
     @GetMapping("/{stockMovementId}")

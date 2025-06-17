@@ -1,6 +1,7 @@
 package com.nexdom.inventorycontrol.service.impl;
 
 import com.nexdom.inventorycontrol.dtos.response.StockMovementRecordDto;
+import com.nexdom.inventorycontrol.dtos.response.StockMovementResponseDto;
 import com.nexdom.inventorycontrol.exceptions.NotFoundException;
 import com.nexdom.inventorycontrol.model.ProductModel;
 import com.nexdom.inventorycontrol.model.StockMovementModel;
@@ -58,5 +59,12 @@ public class StockMovementServiceImpl implements StockMovementService {
     @Override
     public Page<StockMovementModel> findAll(Specification<StockMovementModel> spec, Pageable pageable) {
         return stockMovementRepository.findAll(spec, pageable);
+    }
+
+    @Override
+    public Page<StockMovementResponseDto> findAllDto(Specification<StockMovementModel> spec, Pageable pageable) {
+        Page<StockMovementModel> stockMovementModel = stockMovementRepository.findAll(spec, pageable);
+
+        return stockMovementModel.map(StockMovementResponseDto::new);
     }
 }

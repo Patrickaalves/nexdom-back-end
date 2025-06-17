@@ -1,6 +1,7 @@
 package com.nexdom.inventorycontrol.service;
 
 import com.nexdom.inventorycontrol.dtos.response.StockMovementRecordDto;
+import com.nexdom.inventorycontrol.dtos.response.StockMovementResponseDto;
 import com.nexdom.inventorycontrol.model.StockMovementModel;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,4 +18,6 @@ public interface StockMovementService {
     void delete(StockMovementModel stockMovementModel);
 
     Page<StockMovementModel> findAll(Specification<StockMovementModel> spec, Pageable pageable);
+
+    Page<StockMovementResponseDto> findAllDto(Specification<StockMovementModel> spec, Pageable pageable);
 }
