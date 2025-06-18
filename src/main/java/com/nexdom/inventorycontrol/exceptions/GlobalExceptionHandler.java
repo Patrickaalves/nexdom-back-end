@@ -51,14 +51,14 @@ public class GlobalExceptionHandler {
                 errors.put(fielName, errorMessage);
             }
         );
-        var errorRecordResponse = new ErrorRecordResponse(HttpStatus.BAD_REQUEST.value(), "Error: validation failed", errors);
+        var errorRecordResponse = new ErrorRecordResponse(HttpStatus.BAD_REQUEST.value(), "Erro: validação falhou", errors);
         logger.error("MethodArgumentNotValidException message {}", errorRecordResponse);
         return new ResponseEntity<>(errorRecordResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ObjectOptimisticLockingFailureException.class)
     public ResponseEntity<ErrorRecordResponse> handleOptimisticException(ObjectOptimisticLockingFailureException ex) {
-        var errorRecordResponse = new ErrorRecordResponse(HttpStatus.CONFLICT.value(), "Product has been updated by another user, please try again later", null);
+        var errorRecordResponse = new ErrorRecordResponse(HttpStatus.CONFLICT.value(), "Produto esta sendo atualizado por outro usuario, tente novamente mais tarde", null);
         logger.error("ObjectOptimisticLockingFailureException message {}", errorRecordResponse);
         return new ResponseEntity<>(errorRecordResponse, HttpStatus.CONFLICT);
     }
@@ -91,7 +91,7 @@ public class GlobalExceptionHandler {
                                 + targetType.getSimpleName());
                 return new ResponseEntity<>(
                         new ErrorRecordResponse(HttpStatus.BAD_REQUEST.value(),
-                                "Error: Invalid enum value", errors),
+                                "Erro: valor de enum invalido", errors),
                         HttpStatus.BAD_REQUEST);
             }
 
@@ -101,7 +101,7 @@ public class GlobalExceptionHandler {
                         "Invalid UUID format. Expected 36‑character UUID.");
                 return new ResponseEntity<>(
                         new ErrorRecordResponse(HttpStatus.BAD_REQUEST.value(),
-                                "Error: Invalid UUID value", errors),
+                                "Erro: UUID valor invalido", errors),
                         HttpStatus.BAD_REQUEST);
             }
         }

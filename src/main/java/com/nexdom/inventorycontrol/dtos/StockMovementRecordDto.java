@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 public record StockMovementRecordDto(@JsonView(stockMovementView.stockMovementPost.class)
-                                     @NotNull(message = "productId is mandatory",
+                                     @NotNull(message = "ID do produto é obrigatório",
                                              groups = StockMovementRecordDto.stockMovementView.stockMovementPost.class)
                                      UUID productId,
 
@@ -17,28 +17,28 @@ public record StockMovementRecordDto(@JsonView(stockMovementView.stockMovementPo
                                      OperationType operationType,
 
                                      @JsonView(stockMovementView.stockMovementPost.class)
-                                     @NotNull(message = "salePrice is mandatory",
+                                     @NotNull(message = "Preço de venda é obrigatório",
                                              groups = StockMovementRecordDto.stockMovementView.stockMovementPost.class)
-                                     @Positive(message = "salePrice must be greater than zero",
+                                     @Positive(message = "Preço de venda deve ser maior que zero",
                                              groups = StockMovementRecordDto.stockMovementView.stockMovementPost.class)
                                      @Digits(integer = 10, fraction = 2,
-                                             message = "salePrice supports max 10 integer digits and 2 decimals",
+                                             message = "Preço de venda suporta no maximo 10 digitos e 2 decimais",
                                              groups = StockMovementRecordDto.stockMovementView.stockMovementPost.class)
                                      BigDecimal salePrice,
 
                                      @JsonView(stockMovementView.stockMovementPost.class)
-                                     @NotNull(message = "saleDate is mandatory",
+                                     @NotNull(message = "Data de venda é obrigatório",
                                              groups = StockMovementRecordDto.stockMovementView.stockMovementPost.class)
-                                     @PastOrPresent(message = "saleDate cannot be in the future",
+                                     @PastOrPresent(message = "Data de venda nao pode ser uma data futura",
                                              groups = StockMovementRecordDto.stockMovementView.stockMovementPost.class)
                                      LocalDateTime saleDate,
 
                                      @JsonView(stockMovementView.stockMovementPost.class)
-                                     @NotNull(message = "movementQuantity is mandatory",
+                                     @NotNull(message = "Quantidade movimentada é obrigatória",
                                              groups = StockMovementRecordDto.stockMovementView.stockMovementPost.class)
-                                     @Positive(message = "movementQuantity must be greater than zero",
+                                     @Positive(message = "Quantidade movimentada deve ser maior que zero",
                                              groups = StockMovementRecordDto.stockMovementView.stockMovementPost.class)
-                                     @Max(value = 1_000_000, message = "movementQuantity above the allowed limit",
+                                     @Max(value = 1_000_000, message = "Quantidade movimentada acima do limite permitido",
                                              groups = StockMovementRecordDto.stockMovementView.stockMovementPost.class)
                                      Integer movementQuantity){
     public interface stockMovementView {

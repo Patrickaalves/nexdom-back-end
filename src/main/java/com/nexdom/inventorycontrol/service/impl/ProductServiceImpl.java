@@ -68,7 +68,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductModel updateProduct(ProductRecordDto productDto, ProductModel productModel) {
         if (stockMovementRepository.existsByProductId(productModel.getProductId())) {
-            throw new ProductMovementStockExist("For product id " + productModel.getProductId() + " already exist Movement Stock");
+            throw new ProductMovementStockExist("Ja existe movimento de estoque para este produto");
         }
         productModel.setProductType(productDto.productType());
         productModel.setSupplierPrice(productDto.supplierPrice());
@@ -80,7 +80,7 @@ public class ProductServiceImpl implements ProductService {
     public Optional<ProductModel> findByCode(String productCode) {
         Optional<ProductModel> productModelOptional = productRepository.findByCode(productCode);
         if (productModelOptional.isEmpty()) {
-            throw new NotFoundException("Product not found");
+            throw new NotFoundException("Produto não encontrado");
         }
 
         return productModelOptional;

@@ -61,7 +61,7 @@ public class StockMovementServiceImpl implements StockMovementService {
     public Optional<StockMovementModel> findById(UUID stockMovementId) {
         Optional<StockMovementModel> stockMovementModelOptional = stockMovementRepository.findById(stockMovementId);
         if (stockMovementModelOptional.isEmpty()) {
-            throw new NotFoundException("Stock Movement not found");
+            throw new NotFoundException("Movimento de estoque não encontrado");
         }
 
         return stockMovementModelOptional;

@@ -30,6 +30,11 @@ public class ResolverConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**").maxAge(3600); //Habilitando o cors a nivel global
+        registry.addMapping("/**")
+                .allowedOriginPatterns("http://localhost:5173")   // ou "*"
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowedHeaders("*")
+                .allowCredentials(true)      // se precisar de cookies/Auth
+                .maxAge(3600);
     }
 }

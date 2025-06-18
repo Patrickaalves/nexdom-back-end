@@ -68,13 +68,13 @@ public class ProductModel implements Serializable {
     public void debitStock(int qty) {
         validatePositive(qty);
         if (this.stockQuantity < qty) {
-            throw new BusinessInsuficientStock("Insufficient stock: requested " + qty + ", current stock " + stockQuantity);
+            throw new BusinessInsuficientStock("Estoque insuficiente: solicitado " + qty + ", estoque atual " + stockQuantity);
         }
         this.stockQuantity -= qty;
     }
 
     private void validatePositive(int qty) {
-        if (qty <= 0) throw new IllegalArgumentException("Quantity must be positive");
+        if (qty <= 0) throw new IllegalArgumentException("Quantidade tem que ser positiva");
     }
 
     public UUID getProductId() {
