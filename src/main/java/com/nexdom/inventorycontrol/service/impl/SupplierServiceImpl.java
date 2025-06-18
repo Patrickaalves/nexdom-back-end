@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -22,6 +23,7 @@ public class SupplierServiceImpl implements SupplierService {
         this.supplierRepository = supplierRepository;
     }
 
+    @Transactional
     @Override
     public SupplierModel registerSupplier(SupplierRecordDto supplierRecordDto) {
         SupplierModel supplierModel = new SupplierModel();
@@ -47,5 +49,21 @@ public class SupplierServiceImpl implements SupplierService {
     @Override
     public Page<SupplierModel> findAll(Specification<SupplierModel> spec, Pageable pageable) {
         return supplierRepository.findAll(spec, pageable);
+    }
+
+    @Transactional
+    @Override
+    public void delete(SupplierModel supplierModel) {
+        supplierRepository.delete(supplierModel);
+    }
+
+    @Transactional
+    @Override
+    public SupplierModel updateSupplier(SupplierRecordDto supplierRecordDto, SupplierModel supplierModel) {
+        supplierModel.setCnpj(supplierModel.getCnpj());
+        supplierModel.setCode(supplierModel.getCode());
+        supplierModel.setName(supplierModel.getName());
+        supplierModel.setPhone(supplierModel.getPhone());
+        return supplierRepository.save(supplierModel);
     }
 }

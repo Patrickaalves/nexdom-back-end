@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.nexdom.inventorycontrol.dtos.SupplierRecordDto;
 import com.nexdom.inventorycontrol.dtos.response.SupplierResponseDto;
 import com.nexdom.inventorycontrol.service.SupplierService;
-import com.nexdom.inventorycontrol.specifications.SpecificationProduct;
 import com.nexdom.inventorycontrol.specifications.SpecificationSupplier;
 import com.nexdom.inventorycontrol.validations.SupplierValidator;
 import org.springframework.data.domain.Page;
@@ -54,5 +53,17 @@ public class SupplierController {
         return ResponseEntity.status(HttpStatus.OK).body(supplierService.findById(supplierId).get());
     }
 
+    @PutMapping("/{supplierId}")
+    public ResponseEntity<Object> updateSupplier(@PathVariable UUID supplierId,
+                                                 @RequestBody @Validated(SupplierRecordDto.SupplierView.SupplierPut.class)
+                                                 @JsonView(SupplierRecordDto.SupplierView.SupplierPut.class) SupplierRecordDto supplierRecordDto) {
+        return ResponseEntity.status(HttpStatus.OK).body(new SupplierResponseDto(supplierService.updateSupplier(supplierRecordDto,supplierService.findById(supplierId).get())));
+    }
+
+    @DeleteMapping("/{supplierId}")
+    public ResponseEntity<Object> deleteProduct(@PathVariable UUID supplierId) {
+        supplierService.delete(supplierService.findById(supplierId).get());
+        return ResponseEntity.status(HttpStatus.OK).body("Vendedor deletado com sucesso!");
+    }
 
 }

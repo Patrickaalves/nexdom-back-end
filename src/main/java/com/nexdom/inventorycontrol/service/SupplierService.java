@@ -18,4 +18,8 @@ public interface SupplierService {
     Boolean existsByCode(String code);
 
     Page<SupplierModel> findAll(Specification<SupplierModel> spec, Pageable pageable);
+
+    SupplierModel updateSupplier(SupplierRecordDto supplierRecordDto, SupplierModel supplierModel);
+
+    void delete(SupplierModel supplierModel);
 }
