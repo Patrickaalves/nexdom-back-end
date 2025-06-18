@@ -33,8 +33,8 @@ public class SupplierValidator implements Validator {
     }
 
     private void validateCode(SupplierRecordDto supplierDto, Errors errors) {
-//        if (productService.existsByCode(productDto.code())) {
-//            errors.rejectValue("code", "CodeConflict", "Code is already taken");
-//        }
+        if (supplierService.existsByCode(supplierDto.code())) {
+            errors.rejectValue("code", "CodeConflict", "Codigo ja esta sendo usado");
+        }
     }
 }

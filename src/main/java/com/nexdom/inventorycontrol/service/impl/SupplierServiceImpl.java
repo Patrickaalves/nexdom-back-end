@@ -6,6 +6,9 @@ import com.nexdom.inventorycontrol.model.SupplierModel;
 import com.nexdom.inventorycontrol.repositories.SupplierRepository;
 import com.nexdom.inventorycontrol.service.SupplierService;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -34,5 +37,15 @@ public class SupplierServiceImpl implements SupplierService {
         }
 
         return supplierModelOptional;
+    }
+
+    @Override
+    public Boolean existsByCode(String code) {
+        return supplierRepository.existsByCode(code);
+    }
+
+    @Override
+    public Page<SupplierModel> findAll(Specification<SupplierModel> spec, Pageable pageable) {
+        return supplierRepository.findAll(spec, pageable);
     }
 }
