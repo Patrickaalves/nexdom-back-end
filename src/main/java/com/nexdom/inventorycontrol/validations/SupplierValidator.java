@@ -1,6 +1,6 @@
 package com.nexdom.inventorycontrol.validations;
 
-import com.nexdom.inventorycontrol.dtos.response.SupplierRecordDto;
+import com.nexdom.inventorycontrol.dtos.SupplierRecordDto;
 import com.nexdom.inventorycontrol.service.SupplierService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;

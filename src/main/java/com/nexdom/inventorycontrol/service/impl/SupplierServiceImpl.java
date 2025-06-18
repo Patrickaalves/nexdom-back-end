@@ -1,6 +1,6 @@
 package com.nexdom.inventorycontrol.service.impl;
 
-import com.nexdom.inventorycontrol.dtos.response.SupplierRecordDto;
+import com.nexdom.inventorycontrol.dtos.SupplierRecordDto;
 import com.nexdom.inventorycontrol.exceptions.NotFoundException;
 import com.nexdom.inventorycontrol.model.SupplierModel;
 import com.nexdom.inventorycontrol.repositories.SupplierRepository;

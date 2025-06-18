@@ -1,7 +1,8 @@
 package com.nexdom.inventorycontrol.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.nexdom.inventorycontrol.dtos.response.SupplierRecordDto;
+
+import com.nexdom.inventorycontrol.dtos.SupplierRecordDto;
 import com.nexdom.inventorycontrol.service.SupplierService;
 import com.nexdom.inventorycontrol.validations.SupplierValidator;
 import org.springframework.http.HttpStatus;

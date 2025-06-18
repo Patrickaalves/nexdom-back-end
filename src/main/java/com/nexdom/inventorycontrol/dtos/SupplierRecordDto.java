@@ -1,4 +1,4 @@
-package com.nexdom.inventorycontrol.dtos.response;
+package com.nexdom.inventorycontrol.dtos;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.validation.constraints.NotBlank;
@@ -31,10 +31,8 @@ public record SupplierRecordDto(@JsonView({SupplierView.SupplierPost.class, Supp
                                 String cnpj,
 
                                 @JsonView({SupplierView.SupplierPost.class, SupplierView.SupplierPut.class})
-                                @NotBlank(message = "Telefone é obrigatório",
-                                        groups = {SupplierView.SupplierPost.class, SupplierView.SupplierPut.class})
                                 @Pattern(regexp = "\\d{10,11}",
-                                        message = "Telefone deve conter entre 10 e 11 dígitos numéricos",
+                                        message = "Telefone deve conter entre 11,10 dígitos numéricos",
                                         groups = {SupplierView.SupplierPost.class, SupplierView.SupplierPut.class})
                                 String phone) {
     public interface SupplierView {

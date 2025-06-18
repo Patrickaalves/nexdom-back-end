@@ -1,6 +1,6 @@
 package com.nexdom.inventorycontrol.service;
 
-import com.nexdom.inventorycontrol.dtos.response.SupplierRecordDto;
+import com.nexdom.inventorycontrol.dtos.SupplierRecordDto;
 import com.nexdom.inventorycontrol.model.SupplierModel;
 
 import java.util.Optional;
