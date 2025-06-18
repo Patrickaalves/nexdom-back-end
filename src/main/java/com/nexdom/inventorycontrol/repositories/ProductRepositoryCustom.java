@@ -1,12 +1,12 @@
 package com.nexdom.inventorycontrol.repositories;
 
-import com.nexdom.inventorycontrol.dtos.response.ProductProfitDto;
-import com.nexdom.inventorycontrol.dtos.response.ProductAggregateDto;
+import com.nexdom.inventorycontrol.dtos.response.ProductProfitResponseDto;
+import com.nexdom.inventorycontrol.dtos.response.ProductAggregateResponseDto;
 
 import java.util.UUID;
 
 public interface ProductRepositoryCustom {
-    ProductProfitDto findProductProfits(UUID productId);
+    ProductProfitResponseDto findProductProfits(UUID productId);
 
-    ProductAggregateDto findProductsWithQuantitiesByType(String productType, UUID productId);
+    ProductAggregateResponseDto findProductsWithQuantitiesByType(String productType, UUID productId);
 }

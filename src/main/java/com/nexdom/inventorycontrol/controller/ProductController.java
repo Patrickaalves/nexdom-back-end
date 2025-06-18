@@ -2,6 +2,7 @@ package com.nexdom.inventorycontrol.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.nexdom.inventorycontrol.dtos.ProductRecordDto;
+import com.nexdom.inventorycontrol.dtos.response.ProductResponseDto;
 import com.nexdom.inventorycontrol.model.ProductModel;
 import com.nexdom.inventorycontrol.service.ProductService;
 import com.nexdom.inventorycontrol.specifications.SpecificationProduct;
@@ -37,13 +38,16 @@ public class ProductController {
         if (errors.hasErrors()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors.getAllErrors());
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(productService.registerProduct(productDto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new ProductResponseDto(productService.registerProduct(productDto)));
     }
 
     @GetMapping
-    public ResponseEntity<Page<ProductModel>> getAllProducts(SpecificationProduct.ProductSpec spec,
+    public ResponseEntity<Page<ProductResponseDto>> getAllProducts(SpecificationProduct.ProductSpec spec,
                                                              Pageable pageable) {
-        return ResponseEntity.status(HttpStatus.OK).body(productService.findAll(spec, pageable));
+        Page<ProductResponseDto> dtoPage = productService
+                .findAll(spec, pageable)
+                .map(ProductResponseDto::new);
+        return ResponseEntity.status(HttpStatus.OK).body(dtoPage);
     }
 
     @GetMapping("/{productId}")

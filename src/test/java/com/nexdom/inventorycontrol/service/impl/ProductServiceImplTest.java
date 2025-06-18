@@ -1,8 +1,8 @@
 package com.nexdom.inventorycontrol.service.impl;
 
 import com.nexdom.inventorycontrol.dtos.ProductRecordDto;
-import com.nexdom.inventorycontrol.dtos.response.ProductAggregateDto;
-import com.nexdom.inventorycontrol.dtos.response.ProductProfitDto;
+import com.nexdom.inventorycontrol.dtos.response.ProductAggregateResponseDto;
+import com.nexdom.inventorycontrol.dtos.response.ProductProfitResponseDto;
 import com.nexdom.inventorycontrol.enums.ProductType;
 import com.nexdom.inventorycontrol.exceptions.NotFoundException;
 import com.nexdom.inventorycontrol.exceptions.ProductMovementStockExist;
@@ -178,7 +178,7 @@ class ProductServiceImplTest {
 
     @Test
     void getProfitProduct_delegatesToRepository() {
-        ProductProfitDto dto = new ProductProfitDto(productId, "100L", 12l, BigDecimal.valueOf(100));
+        ProductProfitResponseDto dto = new ProductProfitResponseDto(productId, "100L", 12l, BigDecimal.valueOf(100));
         when(productRepository.findProductProfits(productId)).thenReturn(dto);
 
         assertEquals(dto, service.getProfitProduct(productId));
@@ -189,7 +189,7 @@ class ProductServiceImplTest {
 
     @Test
     void getProductsWithQuantitiesByType_delegatesToRepository() {
-        ProductAggregateDto dto = new ProductAggregateDto(productId, "1021", ProductType.ELETRONIC, 100l);
+        ProductAggregateResponseDto dto = new ProductAggregateResponseDto(productId, "1021", ProductType.ELETRONIC, 100l);
         when(productRepository.findProductsWithQuantitiesByType("eletronic", productId)).thenReturn(dto);
 
         assertEquals(dto, service.getProductsWithQuantitiesByType("eletronic", productId));

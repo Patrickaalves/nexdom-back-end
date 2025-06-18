@@ -27,7 +27,6 @@ public class ProductModel implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-//    @JsonIgnore
     private UUID productId;
 
     @Column(nullable = false, unique = true, length = 20)
@@ -55,6 +54,10 @@ public class ProductModel implements Serializable {
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     @Fetch(FetchMode.SUBSELECT)
     private Set<StockMovementModel> stockMovement;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "supplier_id", nullable = false)
+    private SupplierModel supplier;
 
     @JsonIgnore
     @Version                          // <‑ lock otimista
@@ -139,6 +142,14 @@ public class ProductModel implements Serializable {
 
     public void setStockMovement(Set<StockMovementModel> stockMovement) {
         this.stockMovement = stockMovement;
+    }
+
+    public SupplierModel getSupplier() {
+        return supplier;
+    }
+
+    public void setSupplier(SupplierModel supplier) {
+        this.supplier = supplier;
     }
 
     public Long getVersion() {

@@ -22,4 +22,6 @@ public interface StockMovementService {
     Page<StockMovementResponseDto> findAllDto(Specification<StockMovementModel> spec, Pageable pageable);
 
     StockMovementResponseDto findByIdDto(UUID stockMovementId);
+
+    Boolean existsByProductId(UUID productId);
 }

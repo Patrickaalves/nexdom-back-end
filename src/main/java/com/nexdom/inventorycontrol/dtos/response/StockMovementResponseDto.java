@@ -17,16 +17,16 @@ public record StockMovementResponseDto(
         LocalDateTime creationDate,
         String productCode
 ) {
-    public StockMovementResponseDto(StockMovementModel entity) {
+    public StockMovementResponseDto(StockMovementModel stockMovement) {
         this(
-                entity.getStockMovementId(),
-                entity.getProduct() != null ? entity.getProduct().getProductId() : null,
-                entity.getOperationType(),
-                entity.getSalePrice(),
-                entity.getSaleDate(),
-                entity.getMovementQuantity(),
-                entity.getCreationDate(),
-                entity.getProductCode()
+                stockMovement.getStockMovementId(),
+                stockMovement.getProduct() != null ? stockMovement.getProduct().getProductId() : null,
+                stockMovement.getOperationType(),
+                stockMovement.getSalePrice(),
+                stockMovement.getSaleDate(),
+                stockMovement.getMovementQuantity(),
+                stockMovement.getCreationDate(),
+                stockMovement.getProductCode()
         );
     }
 }

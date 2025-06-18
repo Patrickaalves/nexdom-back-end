@@ -4,7 +4,7 @@ import com.nexdom.inventorycontrol.enums.ProductType;
 
 import java.util.UUID;
 
-public record ProductAggregateDto(
+public record ProductAggregateResponseDto(
         UUID productId,
         String productCode,
         ProductType productType,

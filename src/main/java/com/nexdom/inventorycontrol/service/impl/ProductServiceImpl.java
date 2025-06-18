@@ -1,13 +1,14 @@
 package com.nexdom.inventorycontrol.service.impl;
 
-import com.nexdom.inventorycontrol.dtos.response.ProductAggregateDto;
-import com.nexdom.inventorycontrol.dtos.response.ProductProfitDto;
 import com.nexdom.inventorycontrol.dtos.ProductRecordDto;
+import com.nexdom.inventorycontrol.dtos.response.ProductAggregateResponseDto;
+import com.nexdom.inventorycontrol.dtos.response.ProductProfitResponseDto;
 import com.nexdom.inventorycontrol.exceptions.NotFoundException;
 import com.nexdom.inventorycontrol.exceptions.ProductMovementStockExist;
 import com.nexdom.inventorycontrol.model.ProductModel;
 import com.nexdom.inventorycontrol.repositories.ProductRepository;
 import com.nexdom.inventorycontrol.repositories.StockMovementRepository;
+import com.nexdom.inventorycontrol.repositories.SupplierRepository;
 import com.nexdom.inventorycontrol.service.ProductService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
@@ -23,18 +24,23 @@ import java.util.UUID;
 public class ProductServiceImpl implements ProductService {
 
     final ProductRepository productRepository;
-    private final StockMovementRepository stockMovementRepository;
+    final StockMovementRepository stockMovementRepository;
+    final SupplierRepository supplierRepository;
 
-    public ProductServiceImpl(ProductRepository productRepository, StockMovementRepository stockMovementRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, StockMovementRepository stockMovementRepository, SupplierRepository supplierRepository) {
         this.productRepository = productRepository;
         this.stockMovementRepository = stockMovementRepository;
+        this.supplierRepository = supplierRepository;
     }
+
 
     @Transactional
     @Override
     public ProductModel registerProduct(ProductRecordDto productDto) {
         ProductModel productModel = new ProductModel();
         BeanUtils.copyProperties(productDto, productModel);
+        productModel.setSupplier(supplierRepository.findById(productDto.supplier()).get());
+
         return productRepository.save(productModel);
     }
 
@@ -52,7 +58,7 @@ public class ProductServiceImpl implements ProductService {
     public Optional<ProductModel> findById(UUID productId) {
         Optional<ProductModel> productModelOptional = productRepository.findById(productId);
         if (productModelOptional.isEmpty()) {
-            throw new NotFoundException("Product not found");
+            throw new NotFoundException("Produto não encontrado");
         }
 
         return productModelOptional;
@@ -87,12 +93,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductProfitDto getProfitProduct(UUID productId) {
+    public ProductProfitResponseDto getProfitProduct(UUID productId) {
         return productRepository.findProductProfits(productId);
     }
 
     @Override
-    public ProductAggregateDto getProductsWithQuantitiesByType(String type, UUID productId) {
+    public ProductAggregateResponseDto getProductsWithQuantitiesByType(String type, UUID productId) {
         return productRepository.findProductsWithQuantitiesByType(type, productId);
     }
 }

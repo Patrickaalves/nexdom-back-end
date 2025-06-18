@@ -72,6 +72,11 @@ public class StockMovementServiceImpl implements StockMovementService {
         return this.findById(stockMovementId).map(StockMovementResponseDto::new).get();
     }
 
+    @Override
+    public Boolean existsByProductId(UUID productId) {
+        return stockMovementRepository.existsByProductId(productId);
+    }
+
     @Transactional
     @Override
     public void delete(StockMovementModel stockMovementModel) {

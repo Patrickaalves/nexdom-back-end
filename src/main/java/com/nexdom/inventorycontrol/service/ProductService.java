@@ -1,7 +1,7 @@
 package com.nexdom.inventorycontrol.service;
 
-import com.nexdom.inventorycontrol.dtos.response.ProductAggregateDto;
-import com.nexdom.inventorycontrol.dtos.response.ProductProfitDto;
+import com.nexdom.inventorycontrol.dtos.response.ProductAggregateResponseDto;
+import com.nexdom.inventorycontrol.dtos.response.ProductProfitResponseDto;
 import com.nexdom.inventorycontrol.dtos.ProductRecordDto;
 import com.nexdom.inventorycontrol.model.ProductModel;
 import jakarta.validation.Valid;
@@ -27,7 +27,7 @@ public interface ProductService {
 
     Optional<ProductModel> findByCode(String productCode);
 
-    ProductProfitDto getProfitProduct(UUID productId);
+    ProductProfitResponseDto getProfitProduct(UUID productId);
 
-    ProductAggregateDto getProductsWithQuantitiesByType(String type, UUID productId);
+    ProductAggregateResponseDto getProductsWithQuantitiesByType(String type, UUID productId);
 }

@@ -1,7 +1,7 @@
 package com.nexdom.inventorycontrol.repositories.impl;
 
-import com.nexdom.inventorycontrol.dtos.response.ProductProfitDto;
-import com.nexdom.inventorycontrol.dtos.response.ProductAggregateDto;
+import com.nexdom.inventorycontrol.dtos.response.ProductProfitResponseDto;
+import com.nexdom.inventorycontrol.dtos.response.ProductAggregateResponseDto;
 import com.nexdom.inventorycontrol.enums.OperationType;
 import com.nexdom.inventorycontrol.enums.ProductType;
 import com.nexdom.inventorycontrol.repositories.JpqlExecutor;
@@ -21,7 +21,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
     }
 
     @Override
-    public ProductProfitDto findProductProfits(UUID productId) {
+    public ProductProfitResponseDto findProductProfits(UUID productId) {
         String jpqlStr = """
             SELECT NEW %s (
                 p.productId,
@@ -33,17 +33,17 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
             WHERE sm.operationType = :opType
                 AND p.productId = :productId
             GROUP BY p.productId, p.code
-        """.formatted(ProductProfitDto.class.getName());
+        """.formatted(ProductProfitResponseDto.class.getName());
 
         Map<String, Object> filters = new HashMap<>();
         filters.put("opType", OperationType.EXIT);
         filters.put("productId", productId);
 
-        return jpql.querySingle(jpqlStr, filters, ProductProfitDto.class);
+        return jpql.querySingle(jpqlStr, filters, ProductProfitResponseDto.class);
     }
 
     @Override
-    public ProductAggregateDto findProductsWithQuantitiesByType(String productType, UUID productId) {
+    public ProductAggregateResponseDto findProductsWithQuantitiesByType(String productType, UUID productId) {
         String jpqlQuery = """
             SELECT NEW %s (
                 p.productId,
@@ -63,14 +63,14 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
             WHERE p.productType = :productType
               AND p.productId   = :productId
             GROUP BY p.productId, p.code, p.productType, p.stockQuantity
-        """.formatted(ProductAggregateDto.class.getName());
+        """.formatted(ProductAggregateResponseDto.class.getName());
 
         Map<String, Object> filters = new HashMap<>();
         filters.put("productType", ProductType.valueOf(productType));
         filters.put("productId", productId);
         filters.put("operationType", OperationType.EXIT);
 
-        return jpql.querySingle(jpqlQuery, filters, ProductAggregateDto.class);
+        return jpql.querySingle(jpqlQuery, filters, ProductAggregateResponseDto.class);
     }
 }
 
