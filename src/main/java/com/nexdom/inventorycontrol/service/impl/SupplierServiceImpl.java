@@ -60,10 +60,11 @@ public class SupplierServiceImpl implements SupplierService {
     @Transactional
     @Override
     public SupplierModel updateSupplier(SupplierRecordDto supplierRecordDto, SupplierModel supplierModel) {
-        supplierModel.setCnpj(supplierModel.getCnpj());
-        supplierModel.setCode(supplierModel.getCode());
-        supplierModel.setName(supplierModel.getName());
-        supplierModel.setPhone(supplierModel.getPhone());
+        supplierModel.setCnpj(supplierRecordDto.cnpj());
+        supplierModel.setCode(supplierRecordDto.code());
+        supplierModel.setName(supplierRecordDto.name());
+        supplierModel.setPhone(supplierRecordDto.phone());
+
         return supplierRepository.save(supplierModel);
     }
 }
