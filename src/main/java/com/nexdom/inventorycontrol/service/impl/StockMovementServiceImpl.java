@@ -11,6 +11,7 @@ import com.nexdom.inventorycontrol.service.CustomerService;
 import com.nexdom.inventorycontrol.service.ProductService;
 import com.nexdom.inventorycontrol.service.StockMovementService;
 import org.springframework.beans.BeanUtils;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -27,7 +28,7 @@ public class StockMovementServiceImpl implements StockMovementService {
     final CustomerService customerService;
     final ProductService productService;
 
-    public StockMovementServiceImpl(StockMovementRepository stockMovementRepository, CustomerService customerService, ProductService productService) {
+    public StockMovementServiceImpl(StockMovementRepository stockMovementRepository, CustomerService customerService, @Lazy ProductService productService) {
         this.stockMovementRepository = stockMovementRepository;
         this.customerService = customerService;
         this.productService = productService;

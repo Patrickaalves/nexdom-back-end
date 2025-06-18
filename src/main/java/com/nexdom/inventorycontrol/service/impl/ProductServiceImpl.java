@@ -8,9 +8,8 @@ import com.nexdom.inventorycontrol.exceptions.ProductMovementStockExist;
 import com.nexdom.inventorycontrol.model.ProductModel;
 import com.nexdom.inventorycontrol.model.SupplierModel;
 import com.nexdom.inventorycontrol.repositories.ProductRepository;
-import com.nexdom.inventorycontrol.repositories.StockMovementRepository;
-import com.nexdom.inventorycontrol.repositories.SupplierRepository;
 import com.nexdom.inventorycontrol.service.ProductService;
+import com.nexdom.inventorycontrol.service.StockMovementService;
 import com.nexdom.inventorycontrol.service.SupplierService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
@@ -26,14 +25,15 @@ import java.util.UUID;
 public class ProductServiceImpl implements ProductService {
 
     final ProductRepository productRepository;
-    final StockMovementRepository stockMovementRepository;
+    final StockMovementService stockMovementService;
     final SupplierService supplierService;
 
-    public ProductServiceImpl(ProductRepository productRepository, StockMovementRepository stockMovementRepository, SupplierService supplierService) {
+    public ProductServiceImpl(ProductRepository productRepository, StockMovementService stockMovementService, SupplierService supplierService) {
         this.productRepository = productRepository;
-        this.stockMovementRepository = stockMovementRepository;
+        this.stockMovementService = stockMovementService;
         this.supplierService = supplierService;
     }
+
 
     @Transactional
     @Override
@@ -75,7 +75,7 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     @Override
     public ProductModel updateProduct(ProductRecordDto productDto, ProductModel productModel) {
-        if (stockMovementRepository.existsByProductId(productModel.getProductId())) {
+        if (stockMovementService.existsByProductId(productModel.getProductId())) {
             throw new ProductMovementStockExist("Ja existe movimento de estoque para este produto");
         }
         productModel.setProductType(productDto.productType());
