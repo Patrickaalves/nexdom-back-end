@@ -14,6 +14,7 @@ public record StockMovementResponseDto(
         BigDecimal salePrice,
         LocalDateTime saleDate,
         Integer movementQuantity,
+        UUID customerId,
         LocalDateTime creationDate,
         String productCode
 ) {
@@ -25,6 +26,7 @@ public record StockMovementResponseDto(
                 stockMovement.getSalePrice(),
                 stockMovement.getSaleDate(),
                 stockMovement.getMovementQuantity(),
+                stockMovement.getCustomer().getCustomerId(),
                 stockMovement.getCreationDate(),
                 stockMovement.getProductCode()
         );

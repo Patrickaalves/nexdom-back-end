@@ -6,10 +6,12 @@ import com.nexdom.inventorycontrol.dtos.response.ProductProfitResponseDto;
 import com.nexdom.inventorycontrol.exceptions.NotFoundException;
 import com.nexdom.inventorycontrol.exceptions.ProductMovementStockExist;
 import com.nexdom.inventorycontrol.model.ProductModel;
+import com.nexdom.inventorycontrol.model.SupplierModel;
 import com.nexdom.inventorycontrol.repositories.ProductRepository;
 import com.nexdom.inventorycontrol.repositories.StockMovementRepository;
 import com.nexdom.inventorycontrol.repositories.SupplierRepository;
 import com.nexdom.inventorycontrol.service.ProductService;
+import com.nexdom.inventorycontrol.service.SupplierService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,21 +27,21 @@ public class ProductServiceImpl implements ProductService {
 
     final ProductRepository productRepository;
     final StockMovementRepository stockMovementRepository;
-    final SupplierRepository supplierRepository;
+    final SupplierService supplierService;
 
-    public ProductServiceImpl(ProductRepository productRepository, StockMovementRepository stockMovementRepository, SupplierRepository supplierRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, StockMovementRepository stockMovementRepository, SupplierService supplierService) {
         this.productRepository = productRepository;
         this.stockMovementRepository = stockMovementRepository;
-        this.supplierRepository = supplierRepository;
+        this.supplierService = supplierService;
     }
-
 
     @Transactional
     @Override
     public ProductModel registerProduct(ProductRecordDto productDto) {
         ProductModel productModel = new ProductModel();
         BeanUtils.copyProperties(productDto, productModel);
-        productModel.setSupplier(supplierRepository.findById(productDto.supplier()).get());
+        SupplierModel supplierModel = supplierService.findById(productDto.supplier()).get();
+        productModel.setSupplier(supplierModel);
 
         return productRepository.save(productModel);
     }

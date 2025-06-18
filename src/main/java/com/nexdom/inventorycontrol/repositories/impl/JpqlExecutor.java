@@ -1,4 +1,4 @@
-package com.nexdom.inventorycontrol.repositories;
+package com.nexdom.inventorycontrol.repositories.impl;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;

@@ -23,6 +23,9 @@ public class CustomerModel implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID customerId;
 
+    @Column(nullable = false, unique = true, length = 20)
+    private String code;
+
     @Column(nullable = false, length = 100)
     private String name;
 
@@ -40,6 +43,14 @@ public class CustomerModel implements Serializable {
 
     public void setCustomerId(UUID customerId) {
         this.customerId = customerId;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public String getName() {

@@ -7,6 +7,7 @@ import com.nexdom.inventorycontrol.exceptions.NotFoundException;
 import com.nexdom.inventorycontrol.model.ProductModel;
 import com.nexdom.inventorycontrol.model.StockMovementModel;
 import com.nexdom.inventorycontrol.repositories.StockMovementRepository;
+import com.nexdom.inventorycontrol.service.CustomerService;
 import com.nexdom.inventorycontrol.service.ProductService;
 import com.nexdom.inventorycontrol.service.StockMovementService;
 import org.springframework.beans.BeanUtils;
@@ -23,10 +24,12 @@ import java.util.UUID;
 public class StockMovementServiceImpl implements StockMovementService {
 
     final StockMovementRepository stockMovementRepository;
+    final CustomerService customerService;
     final ProductService productService;
 
-    public StockMovementServiceImpl(StockMovementRepository stockMovementRepository, ProductService productService) {
+    public StockMovementServiceImpl(StockMovementRepository stockMovementRepository, CustomerService customerService, ProductService productService) {
         this.stockMovementRepository = stockMovementRepository;
+        this.customerService = customerService;
         this.productService = productService;
     }
 
@@ -54,6 +57,8 @@ public class StockMovementServiceImpl implements StockMovementService {
         StockMovementModel mov = new StockMovementModel();
         BeanUtils.copyProperties(dto, mov);
         mov.setProduct(product);
+        mov.setCustomer(customerService.findById(dto.customerId()).get());
+
         return mov;
     }
 

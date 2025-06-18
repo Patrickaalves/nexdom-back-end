@@ -125,4 +125,12 @@ public class StockMovementModel implements Serializable {
     public void setProductCode(String productCode) {
         this.productCode = productCode;
     }
+
+    public CustomerModel getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(CustomerModel customer) {
+        this.customer = customer;
+    }
 }

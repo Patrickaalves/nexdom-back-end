@@ -42,10 +42,10 @@ public class SupplierController {
     @GetMapping
     public ResponseEntity<Page<SupplierResponseDto>> getAllProducts(SpecificationSupplier.SupplierSpec spec,
                                                                     Pageable pageable) {
-        Page<SupplierResponseDto> dtoPage = supplierService
+        Page<SupplierResponseDto> dtoProducts = supplierService
                 .findAll(spec, pageable)
                 .map(SupplierResponseDto::new);
-        return ResponseEntity.status(HttpStatus.OK).body(dtoPage);
+        return ResponseEntity.status(HttpStatus.OK).body(dtoProducts);
     }
 
     @GetMapping("/{supplierId}")
