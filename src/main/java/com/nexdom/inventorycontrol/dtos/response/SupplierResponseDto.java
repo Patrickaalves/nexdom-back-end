@@ -13,7 +13,7 @@ public record SupplierResponseDto(UUID supplierId,
         this(
                 entity.getSupplierId(),
                 entity.getCode(),
-                entity.getCnpj(),
+                entity.getName(),
                 entity.getCnpj(),
                 entity.getPhone()
         );

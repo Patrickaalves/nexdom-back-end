@@ -2,7 +2,9 @@ package com.nexdom.inventorycontrol.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.nexdom.inventorycontrol.dtos.ProductRecordDto;
+import com.nexdom.inventorycontrol.dtos.response.ProductProfitResponseDto;
 import com.nexdom.inventorycontrol.dtos.response.ProductResponseDto;
+import com.nexdom.inventorycontrol.exceptions.NotFoundException;
 import com.nexdom.inventorycontrol.model.ProductModel;
 import com.nexdom.inventorycontrol.service.ProductService;
 import com.nexdom.inventorycontrol.specifications.SpecificationProduct;
@@ -14,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -56,18 +59,18 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK).body(optionalProductModel.get());
     }
 
-    @GetMapping("/profit-product/{productId}")
-    public ResponseEntity<Object> getProfitProduct(@PathVariable UUID productId) {
-        productService.findById(productId);
-        return ResponseEntity.status(HttpStatus.OK).body(productService.getProfitProduct(productId));
+    @GetMapping("/profit-product/{productCode}")
+    public ResponseEntity<Object> getProfitProduct(@PathVariable String productCode) {
+        ProductProfitResponseDto profitResponseDto = productService.getProfitProduct(productService.findByCode(productCode).get().getProductId());
+        if (profitResponseDto == null) {
+            throw new NotFoundException("Produto ainda não gerou lucro, sem dados para amostra.");
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(profitResponseDto);
     }
 
-    // Refatorar esse metodo
-    @GetMapping("/find-products-type/{type}/{productId}")
-    public ResponseEntity<Object> getProductsWithQuantitiesByType(@PathVariable String type,
-                                                                  @PathVariable UUID productId) {
-        productService.findById(productId);
-        return ResponseEntity.status(HttpStatus.OK).body(productService.getProductsWithQuantitiesByType(type.toUpperCase(), productId));
+    @GetMapping("/find-products-type/{productCode}")
+    public ResponseEntity<Object> getProductsWithQuantitiesByType(@PathVariable String productCode) {
+        return ResponseEntity.status(HttpStatus.OK).body(productService.getProductsWithQuantitiesByType(productService.findByCode(productCode).get().getProductId()));
     }
 
     @PutMapping("/{productId}")

@@ -52,8 +52,12 @@ public class StockMovementModel implements Serializable {
     private String productCode;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "customer_id", foreignKey = @ForeignKey(name = "fk_stock_customer"))
+    @JoinColumn(name = "customer_id", foreignKey = @ForeignKey(name = "fk_stock_customer"), nullable = true)
     private CustomerModel customer;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "supplier_id", nullable = true)
+    private SupplierModel supplier;
 
     @PrePersist
     public void prePersist() {
@@ -132,5 +136,13 @@ public class StockMovementModel implements Serializable {
 
     public void setCustomer(CustomerModel customer) {
         this.customer = customer;
+    }
+
+    public SupplierModel getSupplier() {
+        return supplier;
+    }
+
+    public void setSupplier(SupplierModel supplier) {
+        this.supplier = supplier;
     }
 }

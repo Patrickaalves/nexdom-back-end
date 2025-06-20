@@ -29,5 +29,5 @@ public interface ProductService {
 
     ProductProfitResponseDto getProfitProduct(UUID productId);
 
-    ProductAggregateResponseDto getProductsWithQuantitiesByType(String type, UUID productId);
+    ProductAggregateResponseDto getProductsWithQuantitiesByType(UUID productId);
 }

@@ -1,7 +1,7 @@
 package com.nexdom.inventorycontrol.repositories.impl;
 
-import com.nexdom.inventorycontrol.dtos.response.ProductProfitResponseDto;
 import com.nexdom.inventorycontrol.dtos.response.ProductAggregateResponseDto;
+import com.nexdom.inventorycontrol.dtos.response.ProductProfitResponseDto;
 import com.nexdom.inventorycontrol.enums.OperationType;
 import com.nexdom.inventorycontrol.enums.ProductType;
 import com.nexdom.inventorycontrol.repositories.ProductRepositoryCustom;
@@ -42,32 +42,25 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
     }
 
     @Override
-    public ProductAggregateResponseDto findProductsWithQuantitiesByType(String productType, UUID productId) {
+    public ProductAggregateResponseDto findProductsWithQuantitiesByType(UUID productId) {
         String jpqlQuery = """
-            SELECT NEW %s (
-                p.productId,
-                p.code,
-                p.productType,
-                COALESCE(SUM(
-                    CASE
-                        WHEN sm.operationType = :operationType
-                        THEN sm.movementQuantity
-                        ELSE 0
-                    END
-                ), 0),
-                p.stockQuantity
-            )
-            FROM ProductModel p
-            LEFT JOIN p.stockMovement sm
-            WHERE p.productType = :productType
-              AND p.productId   = :productId
-            GROUP BY p.productId, p.code, p.productType, p.stockQuantity
+        SELECT NEW %s (
+            p.productId,
+            p.code,
+            p.productType,
+            COALESCE(SUM(CASE WHEN sm.operationType = :exitOperationType THEN sm.movementQuantity ELSE 0 END), 0),
+            p.stockQuantity
+        )
+        FROM ProductModel p
+        LEFT JOIN p.stockMovement sm
+        WHERE p.productId = :productId
+        GROUP BY p.productId, p.code, p.productType, p.stockQuantity
         """.formatted(ProductAggregateResponseDto.class.getName());
 
+
         Map<String, Object> filters = new HashMap<>();
-        filters.put("productType", ProductType.valueOf(productType));
         filters.put("productId", productId);
-        filters.put("operationType", OperationType.EXIT);
+        filters.put("exitOperationType", OperationType.EXIT);
 
         return jpql.querySingle(jpqlQuery, filters, ProductAggregateResponseDto.class);
     }

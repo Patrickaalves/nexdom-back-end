@@ -21,4 +21,6 @@ public interface CustomerService {
     void delete(CustomerModel customerModel);
 
     boolean existsByCode( String code);
+
+    CustomerModel findByIdModel(UUID customerId);
 }

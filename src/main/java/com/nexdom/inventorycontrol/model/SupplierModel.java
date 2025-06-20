@@ -2,8 +2,11 @@ package com.nexdom.inventorycontrol.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.io.Serial;
@@ -48,6 +51,12 @@ public class SupplierModel implements Serializable {
     @JsonIgnore
     @OneToMany(mappedBy = "supplier", fetch = FetchType.LAZY)
     private Set<ProductModel> products = new HashSet<>();
+
+    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @OneToMany(mappedBy = "supplier", fetch = FetchType.LAZY)
+    @Fetch(FetchMode.SUBSELECT)
+    private Set<StockMovementModel> stockMovement;
 
     public UUID getSupplierId() {
         return supplierId;

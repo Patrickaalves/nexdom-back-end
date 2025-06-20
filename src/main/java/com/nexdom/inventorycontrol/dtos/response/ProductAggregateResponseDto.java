@@ -8,5 +8,6 @@ public record ProductAggregateResponseDto(
         UUID productId,
         String productCode,
         ProductType productType,
-        Long quantityOut
+        Long quantityOut,
+        Integer stockQuantity
 ) {}

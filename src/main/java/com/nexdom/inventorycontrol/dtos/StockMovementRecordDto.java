@@ -34,9 +34,10 @@ public record StockMovementRecordDto(@JsonView(stockMovementView.stockMovementPo
                                      LocalDateTime saleDate,
 
                                      @JsonView(stockMovementView.stockMovementPost.class)
-                                     @NotNull(message = "ID do Cliente é obrigatório",
-                                             groups = StockMovementRecordDto.stockMovementView.stockMovementPost.class)
                                      UUID customerId,
+
+                                     @JsonView(stockMovementView.stockMovementPost.class)
+                                     UUID supplierId,
 
                                      @JsonView(stockMovementView.stockMovementPost.class)
                                      @NotNull(message = "Quantidade movimentada é obrigatória",

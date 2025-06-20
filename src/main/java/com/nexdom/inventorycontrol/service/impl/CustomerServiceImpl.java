@@ -47,6 +47,11 @@ public class CustomerServiceImpl implements CustomerService {
         return customerModel;
     }
 
+    @Override
+    public CustomerModel findByIdModel(UUID customerId) {
+        return customerRepository.findById(customerId).orElse(null);
+    }
+
     @Transactional
     @Override
     public CustomerModel updateCustomer(CustomerRecordDto customerRecordDto, CustomerModel customerModel) {

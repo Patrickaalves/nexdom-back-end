@@ -100,7 +100,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductAggregateResponseDto getProductsWithQuantitiesByType(String type, UUID productId) {
-        return productRepository.findProductsWithQuantitiesByType(type, productId);
+    public ProductAggregateResponseDto getProductsWithQuantitiesByType(UUID productId) {
+        return productRepository.findProductsWithQuantitiesByType(productId);
     }
 }

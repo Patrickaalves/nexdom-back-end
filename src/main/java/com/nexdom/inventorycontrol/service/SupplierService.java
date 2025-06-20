@@ -22,4 +22,6 @@ public interface SupplierService {
     SupplierModel updateSupplier(SupplierRecordDto supplierRecordDto, SupplierModel supplierModel);
 
     void delete(SupplierModel supplierModel);
+
+    SupplierModel findByIdModel(UUID uuid);
 }

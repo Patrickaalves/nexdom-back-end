@@ -3,13 +3,17 @@ package com.nexdom.inventorycontrol.service.impl;
 import com.nexdom.inventorycontrol.dtos.StockMovementRecordDto;
 import com.nexdom.inventorycontrol.dtos.response.StockMovementResponseDto;
 import com.nexdom.inventorycontrol.enums.OperationType;
+import com.nexdom.inventorycontrol.exceptions.BusinessRuleException;
 import com.nexdom.inventorycontrol.exceptions.NotFoundException;
+import com.nexdom.inventorycontrol.model.CustomerModel;
 import com.nexdom.inventorycontrol.model.ProductModel;
 import com.nexdom.inventorycontrol.model.StockMovementModel;
+import com.nexdom.inventorycontrol.model.SupplierModel;
 import com.nexdom.inventorycontrol.repositories.StockMovementRepository;
 import com.nexdom.inventorycontrol.service.CustomerService;
 import com.nexdom.inventorycontrol.service.ProductService;
 import com.nexdom.inventorycontrol.service.StockMovementService;
+import com.nexdom.inventorycontrol.service.SupplierService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
@@ -27,11 +31,13 @@ public class StockMovementServiceImpl implements StockMovementService {
     final StockMovementRepository stockMovementRepository;
     final CustomerService customerService;
     final ProductService productService;
+    final SupplierService supplierService;
 
-    public StockMovementServiceImpl(StockMovementRepository stockMovementRepository, CustomerService customerService, @Lazy ProductService productService) {
+    public StockMovementServiceImpl(StockMovementRepository stockMovementRepository, CustomerService customerService, @Lazy ProductService productService, SupplierService supplierService) {
         this.stockMovementRepository = stockMovementRepository;
         this.customerService = customerService;
         this.productService = productService;
+        this.supplierService = supplierService;
     }
 
     @Transactional
@@ -47,10 +53,24 @@ public class StockMovementServiceImpl implements StockMovementService {
         return stockMovementRepository.save(stockMovement);
     }
 
-    private void updateProductStockForRegister(ProductModel product, StockMovementRecordDto dto) {
+    private void updateProductStockForRegister(ProductModel product,
+                                               StockMovementRecordDto dto) {
+
+        // Regras de validação
+        boolean isEntry = dto.operationType() == OperationType.ENTRY;
+        boolean isExit  = dto.operationType() == OperationType.EXIT;
+
+        if (isEntry && dto.supplierId() == null) {
+            throw new BusinessRuleException("Somente um FORNECEDOR pode registrar movimento de ENTRADA.");
+        }
+        if (isExit && dto.customerId() == null) {
+            throw new BusinessRuleException("Somente um CLIENTE pode registrar movimento de SAÍDA.");
+        }
+
+        // Atualiza o estoque
         switch (dto.operationType()) {
-            case EXIT  -> product.debitStock(dto.movementQuantity());
             case ENTRY -> product.creditStock(dto.movementQuantity());
+            case EXIT  -> product.debitStock(dto.movementQuantity());
         }
     }
 
@@ -58,7 +78,20 @@ public class StockMovementServiceImpl implements StockMovementService {
         StockMovementModel mov = new StockMovementModel();
         BeanUtils.copyProperties(dto, mov);
         mov.setProduct(product);
-        mov.setCustomer(customerService.findById(dto.customerId()).get());
+
+        if (dto.customerId() != null) {
+            CustomerModel customerModel = customerService.findByIdModel(dto.customerId());
+            if (customerModel != null) {
+                mov.setCustomer(customerModel);
+            }
+        }
+
+        if (dto.supplierId() != null) {
+            SupplierModel supplierModel = supplierService.findByIdModel(dto.supplierId());
+            if (supplierModel != null) {
+                mov.setSupplier(supplierModel);
+            }
+        }
 
         return mov;
     }
@@ -86,14 +119,34 @@ public class StockMovementServiceImpl implements StockMovementService {
     @Transactional
     @Override
     public void delete(StockMovementModel stockMovementModel) {
-        updateProductStockForDelete(stockMovementModel.getProduct(), stockMovementModel.getOperationType(), stockMovementModel.getMovementQuantity());
+        UUID supplierId = stockMovementModel.getSupplier() != null ? stockMovementModel.getSupplier().getSupplierId() : null ;
+        UUID customerId = stockMovementModel.getCustomer() != null ? stockMovementModel.getCustomer().getCustomerId() : null ;
+        updateProductStockForDelete(stockMovementModel.getProduct(), stockMovementModel.getOperationType(), stockMovementModel.getMovementQuantity(),
+                supplierId, customerId);
         stockMovementRepository.delete(stockMovementModel);
     }
 
-    private void updateProductStockForDelete(ProductModel product,OperationType operationType, Integer movementQuantity) {
+    private void updateProductStockForDelete(ProductModel product,
+                                             OperationType operationType,
+                                             Integer movementQuantity,
+                                             UUID supplierId,
+                                             UUID customerId) {
+
+        boolean isEntry = operationType == OperationType.ENTRY;
+        boolean isExit  = operationType == OperationType.EXIT;
+
+        if (isEntry && supplierId == null) {
+            throw new BusinessRuleException(
+                    "Somente um FORNECEDOR pode excluir um movimento de ENTRADA.");
+        }
+        if (isExit && customerId == null) {
+            throw new BusinessRuleException(
+                    "Somente um CLIENTE pode excluir um movimento de SAÍDA.");
+        }
+
         switch (operationType) {
-            case EXIT  -> product.creditStock(movementQuantity);
             case ENTRY -> product.debitStock(movementQuantity);
+            case EXIT  -> product.creditStock(movementQuantity);
         }
     }
 

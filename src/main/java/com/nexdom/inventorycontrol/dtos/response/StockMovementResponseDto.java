@@ -16,7 +16,8 @@ public record StockMovementResponseDto(
         Integer movementQuantity,
         UUID customerId,
         LocalDateTime creationDate,
-        String productCode
+        String productCode,
+        UUID supplierId
 ) {
     public StockMovementResponseDto(StockMovementModel stockMovement) {
         this(
@@ -26,9 +27,10 @@ public record StockMovementResponseDto(
                 stockMovement.getSalePrice(),
                 stockMovement.getSaleDate(),
                 stockMovement.getMovementQuantity(),
-                stockMovement.getCustomer().getCustomerId(),
+                stockMovement.getCustomer() != null ? stockMovement.getCustomer().getCustomerId() : null,
                 stockMovement.getCreationDate(),
-                stockMovement.getProductCode()
+                stockMovement.getProductCode(),
+                stockMovement.getSupplier() != null ? stockMovement.getSupplier().getSupplierId() : null
         );
     }
 }

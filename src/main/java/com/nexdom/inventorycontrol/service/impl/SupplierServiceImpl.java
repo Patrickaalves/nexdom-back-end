@@ -57,6 +57,11 @@ public class SupplierServiceImpl implements SupplierService {
         supplierRepository.delete(supplierModel);
     }
 
+    @Override
+    public SupplierModel findByIdModel(UUID uuid) {
+        return supplierRepository.findById(uuid).orElse(null);
+    }
+
     @Transactional
     @Override
     public SupplierModel updateSupplier(SupplierRecordDto supplierRecordDto, SupplierModel supplierModel) {

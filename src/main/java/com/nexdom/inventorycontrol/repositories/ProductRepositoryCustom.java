@@ -8,5 +8,5 @@ import java.util.UUID;
 public interface ProductRepositoryCustom {
     ProductProfitResponseDto findProductProfits(UUID productId);
 
-    ProductAggregateResponseDto findProductsWithQuantitiesByType(String productType, UUID productId);
+    ProductAggregateResponseDto findProductsWithQuantitiesByType(UUID productId);
 }

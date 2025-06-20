@@ -55,8 +55,9 @@ public class ProductModel implements Serializable {
     @Fetch(FetchMode.SUBSELECT)
     private Set<StockMovementModel> stockMovement;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "supplier_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "supplier_id",
+            foreignKey = @ForeignKey(name = "fk_product_supplier"))
     private SupplierModel supplier;
 
     @JsonIgnore
