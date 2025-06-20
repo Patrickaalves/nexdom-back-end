@@ -1,7 +1,6 @@
 package com.nexdom.inventorycontrol.validations;
 
 import com.nexdom.inventorycontrol.dtos.CustomerRecordDto;
-import com.nexdom.inventorycontrol.dtos.ProductRecordDto;
 import com.nexdom.inventorycontrol.service.CustomerService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;

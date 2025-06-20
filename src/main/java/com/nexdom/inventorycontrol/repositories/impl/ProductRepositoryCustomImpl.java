@@ -3,7 +3,6 @@ package com.nexdom.inventorycontrol.repositories.impl;
 import com.nexdom.inventorycontrol.dtos.response.ProductAggregateResponseDto;
 import com.nexdom.inventorycontrol.dtos.response.ProductProfitResponseDto;
 import com.nexdom.inventorycontrol.enums.OperationType;
-import com.nexdom.inventorycontrol.enums.ProductType;
 import com.nexdom.inventorycontrol.repositories.ProductRepositoryCustom;
 import org.springframework.stereotype.Repository;
 

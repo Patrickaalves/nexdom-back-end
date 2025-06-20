@@ -4,8 +4,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-import java.util.UUID;
-
 public record CustomerRecordDto(@NotBlank(message = "Código é obrigatório")
                                 @Size(max = 20, message = "O código deve ter no máximo 20 caracteres")
                                 @Pattern(regexp = "^[A-Za-z0-9_-]{1,20}$",
