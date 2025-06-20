@@ -77,7 +77,7 @@ public class ProductController {
                                                 @RequestBody @Validated(ProductRecordDto.ProductView.ProductPut.class)
                                                 ProductRecordDto productDto) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(productService.updateProduct(productDto, productService.findById(productId).get()));
+                .body(new ProductResponseDto(productService.updateProduct(productDto, productService.findById(productId).get())));
     }
 
     @DeleteMapping("/{productId}")
