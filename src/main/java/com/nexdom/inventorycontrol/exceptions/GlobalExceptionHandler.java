@@ -36,9 +36,16 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ErrorRecordResponse> handleIllegalArgumentExceptionException(IllegalArgumentException ex) {
+    public ResponseEntity<ErrorRecordResponse> handleIllegalArgumentException(IllegalArgumentException ex) {
         var errorRecordResponse = new ErrorRecordResponse(HttpStatus.BAD_REQUEST.value(), ex.getMessage(), null);
         logger.error("IllegalArgumentException message {}", errorRecordResponse);
+        return new ResponseEntity<>(errorRecordResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(BusinessRuleException.class)
+    public ResponseEntity<ErrorRecordResponse> BusinessRuleExceptionException(BusinessRuleException ex) {
+        var errorRecordResponse = new ErrorRecordResponse(HttpStatus.BAD_REQUEST.value(), ex.getMessage(), null);
+        logger.error("BusinessRuleException message {}", errorRecordResponse);
         return new ResponseEntity<>(errorRecordResponse, HttpStatus.BAD_REQUEST);
     }
 

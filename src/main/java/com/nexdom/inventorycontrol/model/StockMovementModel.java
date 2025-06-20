@@ -22,7 +22,6 @@ public class StockMovementModel implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-//    @JsonIgnore
     private UUID stockMovementId;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = true)

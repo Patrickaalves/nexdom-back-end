@@ -34,7 +34,7 @@ public class StockMovementServiceImpl implements StockMovementService {
     final ProductService productService;
     final SupplierService supplierService;
 
-    public StockMovementServiceImpl(StockMovementRepository stockMovementRepository, CustomerService customerService, @Lazy ProductService productService, SupplierService supplierService) {
+    public StockMovementServiceImpl(StockMovementRepository stockMovementRepository, @Lazy CustomerService customerService, @Lazy ProductService productService, SupplierService supplierService) {
         this.stockMovementRepository = stockMovementRepository;
         this.customerService = customerService;
         this.productService = productService;
@@ -91,14 +91,14 @@ public class StockMovementServiceImpl implements StockMovementService {
         }
 
         if (dto.customerId() != null) {
-            CustomerModel customerModel = customerService.findByIdModel(dto.customerId());
+            CustomerModel customerModel = customerService.findById(dto.customerId()).get();
             if (customerModel != null) {
                 mov.setCustomer(customerModel);
             }
         }
 
         if (dto.supplierId() != null) {
-            SupplierModel supplierModel = supplierService.findByIdModel(dto.supplierId());
+            SupplierModel supplierModel = supplierService.findById(dto.supplierId()).get();
             if (supplierModel != null) {
                 mov.setSupplier(supplierModel);
             }
@@ -125,6 +125,11 @@ public class StockMovementServiceImpl implements StockMovementService {
     @Override
     public Boolean existsByProductId(UUID productId) {
         return stockMovementRepository.existsByProductId(productId);
+    }
+
+    @Override
+    public boolean existCustomer(CustomerModel customerModel) {
+        return stockMovementRepository.existsByCustomer(customerModel);
     }
 
     @Transactional

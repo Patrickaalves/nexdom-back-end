@@ -1,10 +1,12 @@
 package com.nexdom.inventorycontrol.service.impl;
 
 import com.nexdom.inventorycontrol.dtos.CustomerRecordDto;
+import com.nexdom.inventorycontrol.exceptions.BusinessRuleException;
 import com.nexdom.inventorycontrol.exceptions.NotFoundException;
 import com.nexdom.inventorycontrol.model.CustomerModel;
 import com.nexdom.inventorycontrol.repositories.CustomerRepository;
 import com.nexdom.inventorycontrol.service.CustomerService;
+import com.nexdom.inventorycontrol.service.StockMovementService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
@@ -18,9 +20,11 @@ import java.util.UUID;
 @Service
 public class CustomerServiceImpl implements CustomerService {
     final CustomerRepository customerRepository;
+    final StockMovementService stockMovementService;
 
-    public CustomerServiceImpl(CustomerRepository customerRepository) {
+    public CustomerServiceImpl(CustomerRepository customerRepository, StockMovementService stockMovementService) {
         this.customerRepository = customerRepository;
+        this.stockMovementService = stockMovementService;
     }
 
     @Transactional
@@ -64,6 +68,9 @@ public class CustomerServiceImpl implements CustomerService {
     @Transactional
     @Override
     public void delete(CustomerModel customerModel) {
+        if (stockMovementService.existCustomer(customerModel)) {
+            throw new BusinessRuleException("Existe um movimento de estoque para esse cliente");
+        }
         customerRepository.delete(customerModel);
     }
 

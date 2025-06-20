@@ -63,7 +63,7 @@ public class SupplierController {
     @DeleteMapping("/{supplierId}")
     public ResponseEntity<Object> deleteProduct(@PathVariable UUID supplierId) {
         supplierService.delete(supplierService.findById(supplierId).get());
-        return ResponseEntity.status(HttpStatus.OK).body("Vendedor deletado com sucesso!");
+        return ResponseEntity.status(HttpStatus.OK).body("Fornecedor deletado com sucesso!");
     }
 
 }

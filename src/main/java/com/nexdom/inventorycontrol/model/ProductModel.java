@@ -61,7 +61,7 @@ public class ProductModel implements Serializable {
     private SupplierModel supplier;
 
     @JsonIgnore
-    @Version                          // <‑ lock otimista
+    @Version
     private Long version;
 
     public void creditStock(int qty) {

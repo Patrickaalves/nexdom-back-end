@@ -35,7 +35,7 @@ public class SupplierServiceImpl implements SupplierService {
     public Optional<SupplierModel> findById(UUID supplierId) {
         Optional<SupplierModel> supplierModelOptional = supplierRepository.findById(supplierId);
         if (supplierModelOptional.isEmpty()) {
-            throw new NotFoundException("Vendedor não encontrado");
+            throw new NotFoundException("Fornecedor não encontrado");
         }
 
         return supplierModelOptional;

@@ -2,6 +2,7 @@ package com.nexdom.inventorycontrol.service;
 
 import com.nexdom.inventorycontrol.dtos.StockMovementRecordDto;
 import com.nexdom.inventorycontrol.dtos.response.StockMovementResponseDto;
+import com.nexdom.inventorycontrol.model.CustomerModel;
 import com.nexdom.inventorycontrol.model.StockMovementModel;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,4 +25,6 @@ public interface StockMovementService {
     StockMovementResponseDto findByIdDto(UUID stockMovementId);
 
     Boolean existsByProductId(UUID productId);
+
+    boolean existCustomer(CustomerModel customerModel);
 }

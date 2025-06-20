@@ -78,6 +78,7 @@ public class ProductServiceImpl implements ProductService {
         if (stockMovementService.existsByProductId(productModel.getProductId())) {
             throw new ProductMovementStockExist("Ja existe movimento de estoque para este produto");
         }
+        productModel.setCode(productDto.code());
         productModel.setProductType(productDto.productType());
         productModel.setSupplierPrice(productDto.supplierPrice());
         productModel.setStockQuantity(productDto.stockQuantity());
