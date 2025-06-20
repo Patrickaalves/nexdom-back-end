@@ -2,8 +2,7 @@ package com.nexdom.inventorycontrol.model;
 
 import com.nexdom.inventorycontrol.enums.ProductType;
 import com.nexdom.inventorycontrol.exceptions.BusinessInsuficientStock;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -12,81 +11,66 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ProductModelTest {
 
-    private ProductModel newProduct(int initialQty) {
-        ProductModel p = new ProductModel();
-        p.setCode("ABC");
-        p.setProductType(ProductType.ELETRONIC);
-        p.setSupplierPrice(BigDecimal.TEN);
-        p.setStockQuantity(initialQty);
-        return p;
+    private ProductModel product;
+
+    @BeforeEach
+    void setUp() {
+        product = new ProductModel();
+        product.setStockQuantity(10);
+        product.setCode("PROD123");
+        product.setSupplierPrice(BigDecimal.valueOf(100.00));
+        product.setProductType(ProductType.ELETRONIC);
     }
 
-    /* ----------------------------------------------------------
-       creditStock
-       ---------------------------------------------------------- */
-    @Nested
-    @DisplayName("creditStock()")
-    class Credit {
-
-        @Test
-        void addsQuantity_whenPositive() {
-            ProductModel product = newProduct(5);
-
-            product.creditStock(3);
-
-            assertEquals(8, product.getStockQuantity());
-        }
-
-        @Test
-        void throwsException_whenZeroOrNegative() {
-            ProductModel product = newProduct(5);
-
-            assertAll(
-                    () -> assertThrows(IllegalArgumentException.class,
-                            () -> product.creditStock(0)),
-                    () -> assertThrows(IllegalArgumentException.class,
-                            () -> product.creditStock(-2))
-            );
-        }
+    @Test
+    void testCreditStock_withValidQuantity_shouldIncreaseStock() {
+        product.creditStock(5);
+        assertEquals(15, product.getStockQuantity());
     }
 
-    /* ----------------------------------------------------------
-       debitStock
-       ---------------------------------------------------------- */
-    @Nested
-    @DisplayName("debitStock()")
-    class Debit {
+    @Test
+    void testCreditStock_withZero_shouldThrowException() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            product.creditStock(0);
+        });
+        assertEquals("Quantidade tem que ser positiva", exception.getMessage());
+    }
 
-        @Test
-        void subtractsQuantity_whenEnoughStock() {
-            ProductModel product = newProduct(10);
+    @Test
+    void testCreditStock_withNegative_shouldThrowException() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            product.creditStock(-3);
+        });
+        assertEquals("Quantidade tem que ser positiva", exception.getMessage());
+    }
 
-            product.debitStock(4);
+    @Test
+    void testDebitStock_withValidQuantity_shouldDecreaseStock() {
+        product.debitStock(4);
+        assertEquals(6, product.getStockQuantity());
+    }
 
-            assertEquals(6, product.getStockQuantity());
-        }
+    @Test
+    void testDebitStock_withZero_shouldThrowException() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            product.debitStock(0);
+        });
+        assertEquals("Quantidade tem que ser positiva", exception.getMessage());
+    }
 
-        @Test
-        void throwsBusinessInsuficientStock_whenNotEnough() {
-            ProductModel product = newProduct(3);
+    @Test
+    void testDebitStock_withNegative_shouldThrowException() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            product.debitStock(-5);
+        });
+        assertEquals("Quantidade tem que ser positiva", exception.getMessage());
+    }
 
-            BusinessInsuficientStock ex = assertThrows(
-                    BusinessInsuficientStock.class,
-                    () -> product.debitStock(5));
-
-            assertTrue(ex.getMessage().contains("requested 5, current stock 3"));
-        }
-
-        @Test
-        void throwsIllegalArgument_whenZeroOrNegative() {
-            ProductModel product = newProduct(4);
-
-            assertAll(
-                    () -> assertThrows(IllegalArgumentException.class,
-                            () -> product.debitStock(0)),
-                    () -> assertThrows(IllegalArgumentException.class,
-                            () -> product.debitStock(-1))
-            );
-        }
+    @Test
+    void testDebitStock_withGreaterThanStock_shouldThrowBusinessException() {
+        BusinessInsuficientStock exception = assertThrows(BusinessInsuficientStock.class, () -> {
+            product.debitStock(20);
+        });
+        assertTrue(exception.getMessage().contains("Estoque insuficiente"));
     }
 }

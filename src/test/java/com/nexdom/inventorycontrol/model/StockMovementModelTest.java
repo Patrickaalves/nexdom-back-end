@@ -1,30 +1,56 @@
 package com.nexdom.inventorycontrol.model;
 
+import com.nexdom.inventorycontrol.enums.OperationType;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class StockMovementModelTest {
 
-    @Test
-    void prePersist_setsProductCode_whenProductIsNotNull() {
-        ProductModel product = new ProductModel();
-        product.setCode("PROD-123");
+    private StockMovementModel stockMovement;
+    private ProductModel product;
 
-        StockMovementModel movement = new StockMovementModel();
-        movement.setProduct(product);
+    @BeforeEach
+    void setUp() {
+        stockMovement = new StockMovementModel();
+        product = new ProductModel();
+        product.setCode("PROD001");
 
-        movement.prePersist();
-
-        assertEquals("PROD-123", movement.getProductCode());
+        stockMovement.setProduct(product);
+        stockMovement.setSaleDate(LocalDateTime.now());
+        stockMovement.setSalePrice(BigDecimal.valueOf(50.0));
+        stockMovement.setMovementQuantity(10);
+        stockMovement.setOperationType(OperationType.ENTRY);
     }
 
     @Test
-    void prePersist_doesNotThrow_whenProductIsNull() {
-        StockMovementModel movement = new StockMovementModel();
-        movement.setProduct(null);
+    void testPrePersist_shouldSetProductCode() {
+        stockMovement.prePersist();
+        assertEquals("PROD001", stockMovement.getProductCode());
+    }
 
-        assertDoesNotThrow(movement::prePersist);
-        assertNull(movement.getProductCode());
+    @Test
+    void testPrePersist_withNullProduct_shouldNotThrow() {
+        stockMovement.setProduct(null);
+        assertDoesNotThrow(() -> stockMovement.prePersist());
+        assertNull(stockMovement.getProductCode());
+    }
+
+    @Test
+    void testSettersAndGetters() {
+        UUID id = UUID.randomUUID();
+        stockMovement.setStockMovementId(id);
+        assertEquals(id, stockMovement.getStockMovementId());
+
+        stockMovement.setCustomer(new CustomerModel());
+        assertNotNull(stockMovement.getCustomer());
+
+        stockMovement.setSupplier(new SupplierModel());
+        assertNotNull(stockMovement.getSupplier());
     }
 }
