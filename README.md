@@ -31,5 +31,9 @@ Para facilitar a aplicação subir, você pode subir um container PostgreSQL usa
 `docker run -d --name postgres_nexdom_inventory_control -e POSTGRES_PASSWORD=1234 -e POSTGRES_DB=inventory_control -p 5433:5432 postgres`
 
 ## Clone do repositorio
-git clone https://github.com/Patrickaalves/nexdom-back-end.git
 
+```bash 
+git clone https://github.com/Patrickaalves/nexdom-back-end.git
+```
+## Subir aplicação front-end
+Seguir o readme desse repositorio: https://github.com/Patrickaalves/nexdom-front-end
