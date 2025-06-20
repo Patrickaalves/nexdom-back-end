@@ -2,6 +2,7 @@ package com.nexdom.inventorycontrol.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.nexdom.inventorycontrol.enums.OperationType;
+import com.nexdom.inventorycontrol.exceptions.BusinessRuleException;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -59,10 +60,17 @@ public class StockMovementModel implements Serializable {
     @JoinColumn(name = "supplier_id", nullable = true)
     private SupplierModel supplier;
 
+    @Column(name = "cost_price", precision = 12, scale = 2)
+    private BigDecimal costPrice;
+
     @PrePersist
     public void prePersist() {
         if (this.product != null) {
             this.productCode = product.getCode();
+        }
+
+        if (operationType == OperationType.EXIT && costPrice == null) {
+            throw new BusinessRuleException("costPrice não pode ser nulo em saídas (EXIT)");
         }
     }
 
@@ -144,5 +152,13 @@ public class StockMovementModel implements Serializable {
 
     public void setSupplier(SupplierModel supplier) {
         this.supplier = supplier;
+    }
+
+    public BigDecimal getCostPrice() {
+        return costPrice;
+    }
+
+    public void setCostPrice(BigDecimal costPrice) {
+        this.costPrice = costPrice;
     }
 }

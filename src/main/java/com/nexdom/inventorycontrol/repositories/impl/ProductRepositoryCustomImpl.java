@@ -21,23 +21,26 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
     @Override
     public ProductProfitResponseDto findProductProfits(UUID productId) {
         String jpqlStr = """
-            SELECT NEW %s (
-                p.productId,
-                p.code,
-                SUM(sm.movementQuantity),
-                SUM((sm.salePrice - p.supplierPrice) * sm.movementQuantity))
-            FROM StockMovementModel sm
-                JOIN sm.product p
-            WHERE sm.operationType = :opType
-                AND p.productId = :productId
-            GROUP BY p.productId, p.code
+        SELECT NEW %s (
+            p.productId,
+            p.code,
+            SUM(sm.movementQuantity),
+            SUM(sm.salePrice * sm.movementQuantity),
+            SUM((sm.salePrice - sm.costPrice) * sm.movementQuantity)
+        )
+        FROM StockMovementModel sm
+        JOIN sm.product p
+        WHERE sm.operationType = :entryOp
+          AND p.productId = :productId
+        GROUP BY p.productId, p.code
         """.formatted(ProductProfitResponseDto.class.getName());
 
-        Map<String, Object> filters = new HashMap<>();
-        filters.put("opType", OperationType.EXIT);
-        filters.put("productId", productId);
+        Map<String, Object> params = Map.of(
+                "entryOp", OperationType.EXIT,
+                "productId", productId
+        );
 
-        return jpql.querySingle(jpqlStr, filters, ProductProfitResponseDto.class);
+        return jpql.querySingle(jpqlStr, params, ProductProfitResponseDto.class);
     }
 
     @Override

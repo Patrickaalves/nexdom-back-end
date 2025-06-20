@@ -22,6 +22,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -56,7 +57,6 @@ public class StockMovementServiceImpl implements StockMovementService {
     private void updateProductStockForRegister(ProductModel product,
                                                StockMovementRecordDto dto) {
 
-        // Regras de validação
         boolean isEntry = dto.operationType() == OperationType.ENTRY;
         boolean isExit  = dto.operationType() == OperationType.EXIT;
 
@@ -67,9 +67,11 @@ public class StockMovementServiceImpl implements StockMovementService {
             throw new BusinessRuleException("Somente um CLIENTE pode registrar movimento de SAÍDA.");
         }
 
-        // Atualiza o estoque
         switch (dto.operationType()) {
-            case ENTRY -> product.creditStock(dto.movementQuantity());
+            case ENTRY -> {
+                product.creditStock(dto.movementQuantity());
+                product.setSupplierPrice(dto.salePrice());
+            }
             case EXIT  -> product.debitStock(dto.movementQuantity());
         }
     }
@@ -78,6 +80,15 @@ public class StockMovementServiceImpl implements StockMovementService {
         StockMovementModel mov = new StockMovementModel();
         BeanUtils.copyProperties(dto, mov);
         mov.setProduct(product);
+
+        if (dto.operationType() == OperationType.ENTRY) {
+            mov.setCostPrice(dto.salePrice());
+        } else if (dto.operationType() == OperationType.EXIT) {
+            BigDecimal currentCost = product.getSupplierPrice() != null
+                    ? product.getSupplierPrice()
+                    : BigDecimal.ZERO;
+            mov.setCostPrice(currentCost);
+        }
 
         if (dto.customerId() != null) {
             CustomerModel customerModel = customerService.findByIdModel(dto.customerId());

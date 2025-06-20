@@ -19,12 +19,18 @@ public record StockMovementRecordDto(@JsonView(stockMovementView.stockMovementPo
                                      @JsonView(stockMovementView.stockMovementPost.class)
                                      @NotNull(message = "Preço de venda é obrigatório",
                                              groups = StockMovementRecordDto.stockMovementView.stockMovementPost.class)
-                                     @Positive(message = "Preço de venda deve ser maior que zero",
-                                             groups = StockMovementRecordDto.stockMovementView.stockMovementPost.class)
                                      @Digits(integer = 10, fraction = 2,
                                              message = "Preço de venda suporta no maximo 10 digitos e 2 decimais",
                                              groups = StockMovementRecordDto.stockMovementView.stockMovementPost.class)
                                      BigDecimal salePrice,
+
+                                     @JsonView(stockMovementView.stockMovementPost.class)
+                                     @NotNull(message = "Preço de custo é obrigatório",
+                                             groups = stockMovementView.stockMovementPost.class)
+                                     @Positive(message = "Preço de custo deve ser maior que zero",
+                                             groups = stockMovementView.stockMovementPost.class)
+                                     @Digits(integer = 10, fraction = 2, message = "Preço de custo suporta no máximo 10 dígitos e 2 decimais", groups = stockMovementView.stockMovementPost.class)
+                                     BigDecimal costPrice,
 
                                      @JsonView(stockMovementView.stockMovementPost.class)
                                      @NotNull(message = "Data de venda é obrigatório",
