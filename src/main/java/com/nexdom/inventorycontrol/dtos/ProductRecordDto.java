@@ -30,8 +30,8 @@ public record ProductRecordDto(@JsonView({ProductView.ProductPost.class, Product
                                        groups = {ProductView.ProductPost.class, ProductView.ProductPut.class})
                                @Positive(message = "Preço no fornecedor deve ser maior que zero", groups = {ProductView.ProductPost.class, ProductView.ProductPut.class})
                                @Digits(integer = 10, fraction = 2,
-                                      message = "Preço no fornecedor suporta no maximo 10 digitos e 2 decimais",
-                                      groups = {ProductView.ProductPost.class, ProductView.ProductPut.class})
+                                       message = "Preço no fornecedor suporta no maximo 10 digitos e 2 decimais",
+                                       groups = {ProductView.ProductPost.class, ProductView.ProductPut.class})
                                BigDecimal supplierPrice,
 
                                @JsonView({ProductView.ProductPost.class, ProductView.ProductPut.class})

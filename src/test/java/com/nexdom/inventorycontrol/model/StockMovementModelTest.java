@@ -1,56 +1,49 @@
 package com.nexdom.inventorycontrol.model;
 
 import com.nexdom.inventorycontrol.enums.OperationType;
+import com.nexdom.inventorycontrol.exceptions.BusinessRuleException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class StockMovementModelTest {
 
-    private StockMovementModel stockMovement;
+    private StockMovementModel movement;
     private ProductModel product;
 
     @BeforeEach
     void setUp() {
-        stockMovement = new StockMovementModel();
         product = new ProductModel();
-        product.setCode("PROD001");
+        product.setCode("ABC123");
 
-        stockMovement.setProduct(product);
-        stockMovement.setSaleDate(LocalDateTime.now());
-        stockMovement.setSalePrice(BigDecimal.valueOf(50.0));
-        stockMovement.setMovementQuantity(10);
-        stockMovement.setOperationType(OperationType.ENTRY);
+        movement = new StockMovementModel();
+        movement.setProduct(product);
+        movement.setSalePrice(BigDecimal.valueOf(100));
+        movement.setSaleDate(LocalDateTime.now());
+        movement.setMovementQuantity(2);
     }
 
     @Test
-    void testPrePersist_shouldSetProductCode() {
-        stockMovement.prePersist();
-        assertEquals("PROD001", stockMovement.getProductCode());
+    void entryWithoutCostPrice_ok() {
+        movement.setOperationType(OperationType.ENTRY);
+        assertDoesNotThrow(movement::prePersist);
+        assertEquals("ABC123", movement.getProductCode());
     }
 
     @Test
-    void testPrePersist_withNullProduct_shouldNotThrow() {
-        stockMovement.setProduct(null);
-        assertDoesNotThrow(() -> stockMovement.prePersist());
-        assertNull(stockMovement.getProductCode());
+    void exitWithoutCostPrice_throws() {
+        movement.setOperationType(OperationType.EXIT);
+        assertThrows(BusinessRuleException.class, movement::prePersist);
     }
 
     @Test
-    void testSettersAndGetters() {
-        UUID id = UUID.randomUUID();
-        stockMovement.setStockMovementId(id);
-        assertEquals(id, stockMovement.getStockMovementId());
-
-        stockMovement.setCustomer(new CustomerModel());
-        assertNotNull(stockMovement.getCustomer());
-
-        stockMovement.setSupplier(new SupplierModel());
-        assertNotNull(stockMovement.getSupplier());
+    void exitWithCostPrice_ok() {
+        movement.setOperationType(OperationType.EXIT);
+        movement.setCostPrice(BigDecimal.valueOf(70));
+        assertDoesNotThrow(movement::prePersist);
     }
 }

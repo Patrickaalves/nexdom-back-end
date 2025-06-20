@@ -132,6 +132,11 @@ public class StockMovementServiceImpl implements StockMovementService {
         return stockMovementRepository.existsByCustomer(customerModel);
     }
 
+    @Override
+    public boolean existSupplier(SupplierModel supplierModel) {
+        return stockMovementRepository.existsBySupplier(supplierModel);
+    }
+
     @Transactional
     @Override
     public void delete(StockMovementModel stockMovementModel) {
@@ -147,22 +152,11 @@ public class StockMovementServiceImpl implements StockMovementService {
                                              Integer movementQuantity,
                                              UUID supplierId,
                                              UUID customerId) {
-
-        boolean isEntry = operationType == OperationType.ENTRY;
-        boolean isExit  = operationType == OperationType.EXIT;
-
-        if (isEntry && supplierId == null) {
-            throw new BusinessRuleException(
-                    "Somente um FORNECEDOR pode excluir um movimento de ENTRADA.");
-        }
-        if (isExit && customerId == null) {
-            throw new BusinessRuleException(
-                    "Somente um CLIENTE pode excluir um movimento de SAÍDA.");
-        }
-
-        switch (operationType) {
-            case ENTRY -> product.debitStock(movementQuantity);
-            case EXIT  -> product.creditStock(movementQuantity);
+        if (product != null) {
+            switch (operationType) {
+                case ENTRY -> product.debitStock(movementQuantity);
+                case EXIT  -> product.creditStock(movementQuantity);
+            }
         }
     }
 

@@ -1,11 +1,14 @@
 package com.nexdom.inventorycontrol.service.impl;
 
 import com.nexdom.inventorycontrol.dtos.SupplierRecordDto;
+import com.nexdom.inventorycontrol.exceptions.BusinessRuleException;
 import com.nexdom.inventorycontrol.exceptions.NotFoundException;
 import com.nexdom.inventorycontrol.model.SupplierModel;
 import com.nexdom.inventorycontrol.repositories.SupplierRepository;
+import com.nexdom.inventorycontrol.service.StockMovementService;
 import com.nexdom.inventorycontrol.service.SupplierService;
 import org.springframework.beans.BeanUtils;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -18,9 +21,11 @@ import java.util.UUID;
 @Service
 public class SupplierServiceImpl implements SupplierService {
     final SupplierRepository supplierRepository;
+    final StockMovementService stockMovementService;
 
-    public SupplierServiceImpl(SupplierRepository supplierRepository) {
+    public SupplierServiceImpl(SupplierRepository supplierRepository, @Lazy StockMovementService stockMovementService) {
         this.supplierRepository = supplierRepository;
+        this.stockMovementService = stockMovementService;
     }
 
     @Transactional
@@ -54,6 +59,9 @@ public class SupplierServiceImpl implements SupplierService {
     @Transactional
     @Override
     public void delete(SupplierModel supplierModel) {
+        if (stockMovementService.existSupplier(supplierModel)) {
+            throw new BusinessRuleException("Existe movimento de estoque para esse fornecedor");
+        }
         supplierRepository.delete(supplierModel);
     }
 

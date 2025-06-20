@@ -2,6 +2,7 @@ package com.nexdom.inventorycontrol.repositories;
 
 import com.nexdom.inventorycontrol.model.CustomerModel;
 import com.nexdom.inventorycontrol.model.StockMovementModel;
+import com.nexdom.inventorycontrol.model.SupplierModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -14,4 +15,6 @@ public interface StockMovementRepository extends JpaRepository<StockMovementMode
     boolean existsByProductId(@Param("productId") UUID productId);
 
     boolean existsByCustomer(CustomerModel customer);
+
+    boolean existsBySupplier(SupplierModel supplier);
 }

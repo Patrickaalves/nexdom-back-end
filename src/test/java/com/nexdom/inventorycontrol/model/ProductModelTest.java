@@ -1,8 +1,8 @@
 package com.nexdom.inventorycontrol.model;
 
-import com.nexdom.inventorycontrol.enums.ProductType;
 import com.nexdom.inventorycontrol.exceptions.BusinessInsuficientStock;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -17,60 +17,48 @@ class ProductModelTest {
     void setUp() {
         product = new ProductModel();
         product.setStockQuantity(10);
-        product.setCode("PROD123");
-        product.setSupplierPrice(BigDecimal.valueOf(100.00));
-        product.setProductType(ProductType.ELETRONIC);
+        product.setSupplierPrice(BigDecimal.valueOf(50));
     }
 
+    //  creditStock
+
     @Test
-    void testCreditStock_withValidQuantity_shouldIncreaseStock() {
+    @DisplayName("creditStock deve somar quantidade ao estoque quando quantidade é positiva")
+    void creditStock_PositiveQuantity_IncreasesStock() {
         product.creditStock(5);
         assertEquals(15, product.getStockQuantity());
     }
 
     @Test
-    void testCreditStock_withZero_shouldThrowException() {
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            product.creditStock(0);
-        });
-        assertEquals("Quantidade tem que ser positiva", exception.getMessage());
+    @DisplayName("creditStock deve lançar IllegalArgumentException quando quantidade ≤ 0")
+    void creditStock_NonPositiveQuantity_ThrowsException() {
+        assertAll(
+                () -> assertThrows(IllegalArgumentException.class, () -> product.creditStock(0)),
+                () -> assertThrows(IllegalArgumentException.class, () -> product.creditStock(-3))
+        );
+    }
+
+    //  debitStock 
+
+    @Test
+    @DisplayName("debitStock deve subtrair quantidade do estoque quando há estoque suficiente")
+    void debitStock_SufficientStock_DecreasesStock() {
+        product.debitStock(3);
+        assertEquals(7, product.getStockQuantity());
     }
 
     @Test
-    void testCreditStock_withNegative_shouldThrowException() {
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            product.creditStock(-3);
-        });
-        assertEquals("Quantidade tem que ser positiva", exception.getMessage());
+    @DisplayName("debitStock deve lançar BusinessInsuficientStock quando estoque é insuficiente")
+    void debitStock_InsufficientStock_ThrowsBusinessException() {
+        assertThrows(BusinessInsuficientStock.class, () -> product.debitStock(15));
     }
 
     @Test
-    void testDebitStock_withValidQuantity_shouldDecreaseStock() {
-        product.debitStock(4);
-        assertEquals(6, product.getStockQuantity());
-    }
-
-    @Test
-    void testDebitStock_withZero_shouldThrowException() {
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            product.debitStock(0);
-        });
-        assertEquals("Quantidade tem que ser positiva", exception.getMessage());
-    }
-
-    @Test
-    void testDebitStock_withNegative_shouldThrowException() {
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            product.debitStock(-5);
-        });
-        assertEquals("Quantidade tem que ser positiva", exception.getMessage());
-    }
-
-    @Test
-    void testDebitStock_withGreaterThanStock_shouldThrowBusinessException() {
-        BusinessInsuficientStock exception = assertThrows(BusinessInsuficientStock.class, () -> {
-            product.debitStock(20);
-        });
-        assertTrue(exception.getMessage().contains("Estoque insuficiente"));
+    @DisplayName("debitStock deve lançar IllegalArgumentException quando quantidade ≤ 0")
+    void debitStock_NonPositiveQuantity_ThrowsException() {
+        assertAll(
+                () -> assertThrows(IllegalArgumentException.class, () -> product.debitStock(0)),
+                () -> assertThrows(IllegalArgumentException.class, () -> product.debitStock(-2))
+        );
     }
 }

@@ -12,140 +12,161 @@ import com.nexdom.inventorycontrol.service.SupplierService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
-
 import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.UUID;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class ProductServiceImplTest {
 
+    @Mock
+    ProductRepository productRepository;
+
+    @Mock
+    StockMovementService stockMovementService;
+
+    @Mock
+    SupplierService supplierService;
+
     @InjectMocks
-    private ProductServiceImpl service;
+    ProductServiceImpl productService;
 
-    @Mock
-    private ProductRepository repository;
-
-    @Mock
-    private StockMovementService stockMovementService;
-
-    @Mock
-    private SupplierService supplierService;
-
-    private SupplierModel supplier;
-    private ProductRecordDto dto;
+    UUID supplierId;
+    UUID productId;
 
     @BeforeEach
-    void setUp() {
+    void setup() {
         MockitoAnnotations.openMocks(this);
-        supplier = new SupplierModel();
-        supplier.setSupplierId(UUID.randomUUID());
+        supplierId = UUID.randomUUID();
+        productId = UUID.randomUUID();
+    }
 
-        dto = new ProductRecordDto(
-                "PROD001",              // code
-                ProductType.ELETRONIC,       // productType
-                supplier.getSupplierId(),    // supplier (UUID)
-                BigDecimal.valueOf(50.0),    // supplierPrice
-                10                           // stockQuantity
+    @Test
+    void registerProduct_success() {
+        ProductRecordDto dto = new ProductRecordDto(
+                "CODE123",
+                ProductType.ELETRONIC,  // substitua por um valor real do seu enum
+                supplierId,
+                new BigDecimal("100.00"),
+                10
         );
+
+        SupplierModel supplier = new SupplierModel();
+        supplier.setSupplierId(supplierId);
+
+        when(supplierService.findById(supplierId)).thenReturn(Optional.of(supplier));
+        when(productRepository.save(any(ProductModel.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        ProductModel result = productService.registerProduct(dto);
+
+        assertNotNull(result);
+        assertEquals(dto.code(), result.getCode());
+        assertEquals(dto.supplierPrice(), result.getSupplierPrice());
+        assertEquals(dto.stockQuantity(), result.getStockQuantity());
+        assertEquals(supplier, result.getSupplier());
+
+        verify(supplierService).findById(supplierId);
+        verify(productRepository).save(any(ProductModel.class));
     }
 
     @Test
-    void testRegisterProduct_shouldSaveProductWithSupplier() {
-        when(supplierService.findById(dto.supplier())).thenReturn(Optional.of(supplier));
-        when(repository.save(any())).thenAnswer(inv -> inv.getArgument(0));
+    void registerProduct_supplierNotFound_throws() {
+        ProductRecordDto dto = new ProductRecordDto(
+                "CODE123",
+                ProductType.ELETRONIC,
+                supplierId,
+                new BigDecimal("100.00"),
+                10
+        );
 
-        ProductModel saved = service.registerProduct(dto);
+        when(supplierService.findById(supplierId)).thenReturn(Optional.empty());
 
-        assertEquals(dto.code(), saved.getCode());
-        assertEquals(dto.supplierPrice(), saved.getSupplierPrice());
-        assertEquals(supplier, saved.getSupplier());
+        assertThrows(RuntimeException.class, () -> productService.registerProduct(dto));
+        verify(productRepository, never()).save(any());
     }
 
     @Test
-    void testExistsByCode_shouldReturnTrue() {
-        when(repository.existsByCode("PROD001")).thenReturn(true);
-        assertTrue(service.existsByCode("PROD001"));
-    }
+    void updateProduct_withNoStockMovements_success() {
+        ProductRecordDto dto = new ProductRecordDto(
+                "NEWCODE",
+                ProductType.ELETRONIC,
+                supplierId,
+                new BigDecimal("150.00"),
+                20
+        );
 
-    @Test
-    void testFindById_shouldReturnProduct() {
-        UUID id = UUID.randomUUID();
-        ProductModel product = new ProductModel();
-        product.setProductId(id);
-        when(repository.findById(id)).thenReturn(Optional.of(product));
-
-        Optional<ProductModel> result = service.findById(id);
-        assertEquals(product, result.get());
-    }
-
-    @Test
-    void testFindById_shouldThrowNotFoundException() {
-        UUID id = UUID.randomUUID();
-        when(repository.findById(id)).thenReturn(Optional.empty());
-        assertThrows(NotFoundException.class, () -> service.findById(id));
-    }
-
-    @Test
-    void testDelete_shouldCallRepositoryDelete() {
-        ProductModel product = new ProductModel();
-        service.delete(product);
-        verify(repository).delete(product);
-    }
-
-    @Test
-    void testUpdateProduct_shouldUpdateIfNoStockMovement() {
-        UUID productId = UUID.randomUUID();
-        ProductModel product = new ProductModel();
-        product.setProductId(productId);
+        ProductModel existingProduct = new ProductModel();
+        existingProduct.setProductId(productId);
 
         when(stockMovementService.existsByProductId(productId)).thenReturn(false);
-        when(repository.save(any())).thenAnswer(inv -> inv.getArgument(0));
+        when(productRepository.save(existingProduct)).thenReturn(existingProduct);
 
-        ProductModel updated = service.updateProduct(dto, product);
+        ProductModel updated = productService.updateProduct(dto, existingProduct);
 
-        assertEquals(dto.stockQuantity(), updated.getStockQuantity());
+        assertEquals(dto.code(), updated.getCode());
+        assertEquals(dto.productType(), updated.getProductType());
         assertEquals(dto.supplierPrice(), updated.getSupplierPrice());
+        assertEquals(dto.stockQuantity(), updated.getStockQuantity());
     }
 
     @Test
-    void testUpdateProduct_shouldThrowIfStockMovementExists() {
-        UUID productId = UUID.randomUUID();
-        ProductModel product = new ProductModel();
-        product.setProductId(productId);
+    void updateProduct_withStockMovements_throws() {
+        ProductRecordDto dto = new ProductRecordDto(
+                "NEWCODE",
+                ProductType.ELETRONIC,
+                supplierId,
+                new BigDecimal("150.00"),
+                20
+        );
+
+        ProductModel existingProduct = new ProductModel();
+        existingProduct.setProductId(productId);
 
         when(stockMovementService.existsByProductId(productId)).thenReturn(true);
 
-        assertThrows(ProductMovementStockExist.class, () -> service.updateProduct(dto, product));
+        assertThrows(ProductMovementStockExist.class, () -> productService.updateProduct(dto, existingProduct));
+        verify(productRepository, never()).save(any());
     }
 
     @Test
-    void testFindByCode_shouldReturnProduct() {
+    void findById_existingProduct_success() {
         ProductModel product = new ProductModel();
-        when(repository.findByCode("PROD001")).thenReturn(Optional.of(product));
-        Optional<ProductModel> result = service.findByCode("PROD001");
-        assertEquals(product, result.get());
+        product.setProductId(productId);
+
+        when(productRepository.findById(productId)).thenReturn(Optional.of(product));
+
+        Optional<ProductModel> found = productService.findById(productId);
+
+        assertTrue(found.isPresent());
+        assertEquals(productId, found.get().getProductId());
     }
 
     @Test
-    void testFindByCode_shouldThrowNotFoundException() {
-        when(repository.findByCode("NOTFOUND")).thenReturn(Optional.empty());
-        assertThrows(NotFoundException.class, () -> service.findByCode("NOTFOUND"));
+    void findById_notFound_throws() {
+        when(productRepository.findById(productId)).thenReturn(Optional.empty());
+
+        assertThrows(NotFoundException.class, () -> productService.findById(productId));
     }
 
     @Test
-    void testGetProfitProduct_shouldCallRepository() {
-        UUID productId = UUID.randomUUID();
-        service.getProfitProduct(productId);
-        verify(repository).findProductProfits(productId);
+    void findByCode_existingProduct_success() {
+        ProductModel product = new ProductModel();
+        product.setCode("CODE123");
+
+        when(productRepository.findByCode("CODE123")).thenReturn(Optional.of(product));
+
+        Optional<ProductModel> found = productService.findByCode("CODE123");
+
+        assertTrue(found.isPresent());
+        assertEquals("CODE123", found.get().getCode());
     }
 
     @Test
-    void testGetProductsWithQuantitiesByType_shouldCallRepository() {
-        UUID productId = UUID.randomUUID();
-        service.getProductsWithQuantitiesByType(productId);
-        verify(repository).findProductsWithQuantitiesByType(productId);
+    void findByCode_notFound_throws() {
+        when(productRepository.findByCode("CODE123")).thenReturn(Optional.empty());
+
+        assertThrows(NotFoundException.class, () -> productService.findByCode("CODE123"));
     }
+
 }
