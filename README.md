@@ -26,7 +26,7 @@ Este projeto tem como objetivo principal fornecer uma API para gerenciar produto
 
 ## Configuração do Banco de Dados com Docker
 
-Para facilitar o desenvolvimento, você pode subir um container PostgreSQL usando o comando abaixo:
+Para facilitar a aplicação subir, você pode subir um container PostgreSQL usando o comando abaixo:
 
 `docker run -d --name postgres_nexdom_inventory_control -e POSTGRES_PASSWORD=1234 -e POSTGRES_DB=inventory_control -p 5433:5432 postgres`
 
