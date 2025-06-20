@@ -37,3 +37,6 @@ git clone https://github.com/Patrickaalves/nexdom-back-end.git
 ```
 ## Subir aplicação front-end
 Seguir o readme desse repositorio: https://github.com/Patrickaalves/nexdom-front-end
+
+## Coleção postman
+Adicionei a coleção postmam para testar os endpoints, esta no arquivo nomeado: request.postman_collection.json

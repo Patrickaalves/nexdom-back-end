@@ -1,0 +1,600 @@
+{
+	"info": {
+		"_postman_id": "e0c4e42f-5d4e-4c6c-a6b6-53830fa04aa8",
+		"name": "request",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21798567",
+		"_collection_link": "https://plataforma-ead-postmam.postman.co/workspace/nexdom~3ab5ab8f-e055-44d9-a184-89aaa954da3b/collection/21798567-e0c4e42f-5d4e-4c6c-a6b6-53830fa04aa8?action=share&source=collection_link&creator=21798567"
+	},
+	"item": [
+		{
+			"name": "PRODUCTS",
+			"item": [
+				{
+					"name": "POST PRODUCT",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"code\": \"ps33\",\n    \"productType\": \"ELETRONIC\",\n    \"supplier\": \"53d36d8f-afe8-486f-9591-ef42cc256155\",\n    \"supplierPrice\": 345,\n    \"stockQuantity\": 20\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/inventory-control/product",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"inventory-control",
+								"product"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT PRODUCT",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"code\": \"playstation33\",\n    \"productType\": \"ELETRONIC\",\n    \"supplierPrice\": 122.2,\n    \"stockQuantity\": 444\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/inventory-control/product/d51b8262-8c54-430c-96bb-58569b10ac33",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"inventory-control",
+								"product",
+								"d51b8262-8c54-430c-96bb-58569b10ac33"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE ONE PRODUCT",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/inventory-control/product/b1f443ef-e446-4a2e-a67a-4aed55db2ab0",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"inventory-control",
+								"product",
+								"b1f443ef-e446-4a2e-a67a-4aed55db2ab0"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET ALL PRODUCTS",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/inventory-control/product",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"inventory-control",
+								"product"
+							],
+							"query": [
+								{
+									"key": "code",
+									"value": "#",
+									"disabled": true
+								},
+								{
+									"key": "productType",
+									"value": "ELETRONIC",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET ONE PRODUCT",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/inventory-control/product/b1f443ef-e446-4a2e-a67a-4aed55db2ab0",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"inventory-control",
+								"product",
+								"b1f443ef-e446-4a2e-a67a-4aed55db2ab0"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PROFIT-PRODUCT (Lucro por produto)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/inventory-control/product/profit-product/playstation33",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"inventory-control",
+								"product",
+								"profit-product",
+								"playstation33"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "FIND PRODUCTS",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/inventory-control/product/find-products-type/playstation33",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"inventory-control",
+								"product",
+								"find-products-type",
+								"playstation33"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "STOCK_MOVEMENT",
+			"item": [
+				{
+					"name": "SAVE STOCK MOVEMENT",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"productId\": \"d51b8262-8c54-430c-96bb-58569b10ac33\",\n    \"operationType\": \"EXIT\",\n    \"salePrice\": 222222,\n    \"costPrice\": 0,\n    \"saleDate\": \"2025-06-19T14:05:00\",\n    \"customerId\": \"7bff69c3-59ad-4880-84db-1edec6281dbf\",\n    \"movementQuantity\": 1\n}\n\n// {\n//     \"productId\": \"d51b8262-8c54-430c-96bb-58569b10ac33\",\n//     \"operationType\": \"ENTRY\",\n//     \"salePrice\": 730,\n//     \"costPrice\": 0,\n//     \"saleDate\": \"2025-06-19T14:05:00\",\n//     \"supplierId\": \"53d36d8f-afe8-486f-9591-ef42cc256155\",\n//     \"movementQuantity\": 1  \n// }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/inventory-control/stock-movement",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"inventory-control",
+								"stock-movement"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SAVE STOCK MOVEMENT",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/inventory-control/stock-movement/01989d24-5f20-4271-b9a5-a664850a1f75",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"inventory-control",
+								"stock-movement",
+								"01989d24-5f20-4271-b9a5-a664850a1f75"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET ALL STOCK MOVEMENTS",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/inventory-control/stock-movement",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"inventory-control",
+								"stock-movement"
+							],
+							"query": [
+								{
+									"key": "productId",
+									"value": "4e154cbe-2218-401c-8865-8abb5691bfca",
+									"disabled": true
+								},
+								{
+									"key": "operationType",
+									"value": "EXIT",
+									"disabled": true
+								},
+								{
+									"key": "salePrice",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "minSalePrice",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "maxSalePrice",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "saleDate",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "movementQuantity",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "minQuantity",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "maxQuantity",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET ONE STOCK MOVEMENT",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/inventory-control/stock-movement/97675a87-3d09-4b38-9db7-fc4bac2a036c",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"inventory-control",
+								"stock-movement",
+								"97675a87-3d09-4b38-9db7-fc4bac2a036c"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "SUPPLIERS",
+			"item": [
+				{
+					"name": "POST SUPPLIER",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"code\": \"ComTelefgone\",\n    \"name\": \"NomePatrick\",\n    \"phone\": \"7735231815\",\n    \"cnpj\": \"91069329000164\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/inventory-control/supplier",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"inventory-control",
+								"supplier"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET ALL SUPPLIERS",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/inventory-control/supplier",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"inventory-control",
+								"supplier"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET ONE SUPPLIER",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/inventory-control/supplier/53d36d8f-afe8-486f-9591-ef42cc256155",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"inventory-control",
+								"supplier",
+								"53d36d8f-afe8-486f-9591-ef42cc256155"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE SUPPLIER",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/inventory-control/supplier/f48d946e-35a0-4d9b-b183-cdc6e3f04279",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"inventory-control",
+								"supplier",
+								"f48d946e-35a0-4d9b-b183-cdc6e3f04279"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT SUPPLIER",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"code\": \"cZZZZZ\",\n    \"name\": \"Patrick\",\n    //\"phone\": \"7735231815\",\n    \"cnpj\": \"91069329000164\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/inventory-control/supplier/69bbb112-8566-4f75-9a0d-a9f1886c5757",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"inventory-control",
+								"supplier",
+								"69bbb112-8566-4f75-9a0d-a9f1886c5757"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "CUSTOMER",
+			"item": [
+				{
+					"name": "POST CUSTOMER",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"code\": \"codeVendor\",\n    \"name\": \"NomeVendedor\",\n    \"phone\": \"47999208192\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/inventory-control/customer",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"inventory-control",
+								"customer"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET ALL CUSTOMER",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/inventory-control/customer",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"inventory-control",
+								"customer"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET ONE CUSTOMER",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/inventory-control/customer/7bff69c3-59ad-4880-84db-1edec6281dbf",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"inventory-control",
+								"customer",
+								"7bff69c3-59ad-4880-84db-1edec6281dbf"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT CUSTOMER",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"code\": \"DSADSADS\",\n    \"name\": \"NomeVendedor\",\n    \"phone\": \"47999208192\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/inventory-control/customer/7bff69c3-59ad-4880-84db-1edec6281dbf",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"inventory-control",
+								"customer",
+								"7bff69c3-59ad-4880-84db-1edec6281dbf"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE CUSTOMER",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/inventory-control/customer/eb01e260-390e-4d52-87a8-d25d54a883f2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"inventory-control",
+								"customer",
+								"eb01e260-390e-4d52-87a8-d25d54a883f2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
